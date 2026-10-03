@@ -1,0 +1,47 @@
+---
+// Lots of requests arrive at once; a service sorts them out and talks to the database.
+const packets = [
+  { x: 33, y: 22, dx: 81, dy: 34, hue: 'red', d: 0 },
+  { x: 33, y: 57, dx: 81, dy: 0, hue: 'yellow', d: -0.8 },
+  { x: 33, y: 90, dx: 81, dy: -33, hue: 'pink', d: -1.6 },
+  { x: 188, y: 50, dx: 38, dy: 0, hue: 'card', d: -0.4 },
+  { x: 226, y: 64, dx: -38, dy: 0, hue: 'hue', d: -1.6 },
+]
+---
+
+<svg class="art art--backend" viewBox="0 0 320 120" aria-hidden="true">
+  <path class="backend__wire" d="M37 26 L118 60 M37 60 H118 M37 94 L118 60 M182 54 H232 M182 66 H232"></path>
+
+  <circle cx="28" cy="26" r="9" style="fill: var(--red)"></circle>
+  <circle cx="28" cy="60" r="9" style="fill: var(--yellow)"></circle>
+  <circle cx="28" cy="94" r="9" style="fill: var(--pink)"></circle>
+
+  <rect x="118" y="28" width="64" height="64" rx="9" class="fill-card"></rect>
+  <path d="M118 49.3 H182 M118 70.6 H182" class="fill-none"></path>
+  {
+    [38.6, 60, 81.3].map((y, i) => (
+      <>
+        <circle class="backend__led" cx="130" cy={y} r="3.2" style={`--d: ${-i * 0.5}s`} />
+        <path d={`M142 ${y} H170`} class="backend__slot" />
+      </>
+    ))
+  }
+
+  <path d="M232 34 V86 A30 9 0 0 0 292 86 V34" class="fill-hue"></path>
+  <ellipse cx="262" cy="34" rx="30" ry="9" class="fill-hue"></ellipse>
+  <path d="M232 52 A30 9 0 0 0 292 52 M232 70 A30 9 0 0 0 292 70" class="fill-none"></path>
+
+  {
+    packets.map((p) => (
+      <rect
+        class="backend__packet"
+        x={p.x}
+        y={p.y}
+        width="7"
+        height="7"
+        rx="1.5"
+        style={`--dx: ${p.dx}px; --dy: ${p.dy}px; --d: ${p.d}s; fill: var(--${p.hue})`}
+      />
+    ))
+  }
+</svg>

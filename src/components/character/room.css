@@ -1,0 +1,215 @@
+/* The hideout (./Room.astro). It's drawn like the avatar, in fixed ink and colours, so it looks
+   the same in either theme until night falls: then the room dims, the window shows the moon and
+   the lamp comes on. */
+
+.room {
+  position: relative;
+  aspect-ratio: 1000 / 560;
+  border: var(--stroke) solid var(--ink);
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: #f1e6cf;
+  box-shadow: 6px 6px 0 var(--shadow);
+}
+.room__scene {
+  --ink: #17150f;
+  --card: #fbf8f2;
+  --red: #ff5a3c;
+  --green: #17b884;
+  --pink: #ff6cc4;
+  --blue: #3f66ff;
+  --yellow: #ffc634;
+  display: block;
+  width: 100%;
+  height: 100%;
+  stroke: var(--ink);
+  stroke-width: 4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  user-select: none;
+}
+.room__wall {
+  fill: #f1e6cf;
+}
+.room__paper,
+.room__bulb {
+  fill: var(--card);
+}
+.room__ink {
+  fill: var(--ink);
+}
+.room__wood {
+  fill: #d9a066;
+}
+.room__wood-2 {
+  fill: #c4874f;
+}
+.room__silver {
+  fill: #d6dae1;
+}
+.room__silver-2 {
+  fill: #b5bcc8;
+}
+.room__pot {
+  fill: #e2774b;
+}
+.room__leaf,
+.room__near {
+  fill: var(--green);
+}
+.room__far {
+  fill: #9db3ff;
+}
+.room__near,
+.room__far {
+  transition: fill 0.5s;
+}
+.room__sun {
+  fill: var(--yellow);
+}
+.room__moon {
+  fill: #fff1b8;
+}
+.room__suit {
+  fill: #3b3a45;
+}
+.room__note-blue {
+  fill: #a9bcff;
+}
+.room__sticker {
+  stroke-width: 2.5px;
+  vector-effect: non-scaling-stroke;
+}
+.room__spine {
+  font: 600 9px var(--mono);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  text-anchor: middle;
+  dominant-baseline: central;
+  fill: var(--ink);
+  stroke: none;
+}
+
+/* day and night */
+.room__sky {
+  fill: #cfe2ff;
+  transition: fill 0.5s;
+}
+.room__day {
+  transition: opacity 0.5s;
+}
+.room__night-sky,
+.room__dark,
+.room__beam {
+  opacity: 0;
+  transition: opacity 0.5s;
+  pointer-events: none;
+}
+[data-theme='dark'] .room__sky {
+  fill: #26306a;
+}
+[data-theme='dark'] .room__day {
+  opacity: 0;
+}
+[data-theme='dark'] .room__far {
+  fill: #4f5fa8;
+}
+[data-theme='dark'] .room__near {
+  fill: #1b6a54;
+}
+[data-theme='dark'] .room__night-sky,
+[data-theme='dark'] .room__dark,
+[data-theme='dark'] .room__beam {
+  opacity: 1;
+}
+[data-theme='dark'] .room__bulb {
+  fill: #fff1b8;
+}
+
+/* poking things */
+.room [data-poke] {
+  cursor: pointer;
+}
+.room [data-poke]:focus-visible {
+  outline: 3px solid var(--blue);
+  outline-offset: 3px;
+}
+/* the browser rings svg on a click too; keep it for the keyboard */
+.room [data-poke]:focus:not(:focus-visible) {
+  outline: none;
+}
+.room__lift {
+  transform-box: fill-box;
+  transform-origin: 50% 100%;
+  transition: translate 0.3s var(--spring);
+}
+.room__book:hover .room__lift,
+.room__book:focus-visible .room__lift {
+  translate: 0 -7px;
+}
+.room__cd {
+  transition: translate 0.35s var(--spring);
+}
+.room__disc:hover .room__cd,
+.room__disc:focus-visible .room__cd {
+  translate: 0 -16px;
+}
+.room__item.is-hopping .room__lift {
+  animation: room-hop 0.55s var(--ease);
+}
+@keyframes room-hop {
+  35% {
+    translate: 0 -16px;
+    rotate: -6deg;
+  }
+  70% {
+    translate: 0 0;
+    rotate: 3deg;
+  }
+}
+/* the avatar's own wobble, moved onto a group around it so it works in every browser */
+.room__scene .avatar {
+  width: 340px;
+  height: 329px;
+}
+.room__scene .avatar.is-wobbling {
+  animation: none;
+}
+.room__me {
+  transform-box: fill-box;
+  transform-origin: 50% 90%;
+}
+.room__me:has(.is-wobbling) {
+  animation: wobble 0.6s var(--ease);
+}
+
+/* the steam (keyframes in ../avatar/avatar.css) only rises while the room is on screen */
+.room__steam path {
+  stroke-dasharray: 16 48;
+  animation: steam 2.4s var(--ease) infinite;
+}
+.room__steam path + path {
+  animation-delay: 1.2s;
+}
+.room:not(.is-playing) .room__steam path {
+  animation-play-state: paused;
+}
+
+.room .bubble {
+  left: 53.4%;
+  bottom: 65.4%;
+  max-width: min(250px, 42%);
+}
+
+/* on phones, the middle of the room: the shelf, me, the laptop and the coffee */
+@media (max-width: 560px) {
+  .room {
+    aspect-ratio: 1;
+  }
+  .room .bubble {
+    left: 58%;
+    bottom: 56%;
+    padding: 9px 11px 10px;
+    font-size: 12.5px;
+  }
+}

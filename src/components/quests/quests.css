@@ -1,0 +1,89 @@
+/* The quests: one card for each area of work, with a drawing along the top. */
+
+.quests {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px;
+}
+.quest {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.quest:hover {
+  transform: translate(-3px, -3px) rotate(-0.4deg);
+  box-shadow: 9px 9px 0 var(--hue);
+}
+.quest__art {
+  width: 100%;
+  aspect-ratio: 320 / 120;
+  max-height: 184px;
+  padding: 12px 16px;
+  border-bottom: var(--stroke) solid var(--ink);
+  background-color: color-mix(in srgb, var(--hue) 16%, var(--card));
+  background-image: radial-gradient(color-mix(in srgb, var(--ink) 13%, transparent) 1px, transparent 1.4px);
+  background-size: 14px 14px;
+}
+.quest__body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 20px 22px 22px;
+}
+.quest__title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.quest__title .shape {
+  transition: rotate 0.5s var(--spring);
+}
+.quest:hover .quest__title .shape {
+  rotate: -20deg;
+}
+.quest h3 {
+  font: 700 clamp(20px, 2.1vw, 25px)/1.15 var(--display);
+  letter-spacing: -0.025em;
+}
+.quest__line {
+  color: var(--ink-2);
+  font-size: 16px;
+  line-height: 1.5;
+  text-wrap: pretty;
+}
+.quest__things {
+  display: grid;
+  gap: 7px;
+  font-size: 15px;
+  line-height: 1.45;
+}
+.quest__things li {
+  display: flex;
+  align-items: baseline;
+  gap: 11px;
+}
+.quest__things li::before {
+  content: '';
+  flex: none;
+  width: 8px;
+  height: 8px;
+  translate: 0 -1px;
+  border: 1.5px solid var(--ink);
+  border-radius: 2px;
+  background: var(--hue);
+  rotate: 45deg;
+}
+.quest__flavour {
+  margin-top: auto;
+  padding-top: 14px;
+  border-top: 1.5px dashed var(--line);
+  font: 500 12.5px/1.55 var(--mono);
+  color: var(--ink-3);
+}
+
+@media (max-width: 760px) {
+  .quests {
+    grid-template-columns: 1fr;
+  }
+}

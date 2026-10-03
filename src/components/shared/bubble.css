@@ -1,0 +1,48 @@
+/* Speech bubbles, for whichever avatar is talking. */
+
+.bubble {
+  position: absolute;
+  z-index: 4;
+  max-width: 250px;
+  padding: 12px 14px 13px;
+  border: var(--stroke) solid var(--ink);
+  border-radius: 14px;
+  background: var(--card);
+  box-shadow: 4px 4px 0 var(--shadow);
+  font: 500 14px/1.4 var(--mono);
+  transform-origin: 18px 100%;
+  transition:
+    opacity 0.2s,
+    scale 0.35s var(--spring);
+}
+.bubble::after {
+  content: '';
+  position: absolute;
+  left: 18px;
+  bottom: -11px;
+  width: 16px;
+  height: 16px;
+  background: var(--card);
+  border-right: var(--stroke) solid var(--ink);
+  border-bottom: var(--stroke) solid var(--ink);
+  rotate: 45deg;
+  border-bottom-right-radius: 3px;
+}
+.bubble.is-hidden {
+  opacity: 0;
+  scale: 0.6;
+}
+.bubble .caret {
+  display: inline-block;
+  width: 0.55em;
+  height: 1.1em;
+  margin-left: 2px;
+  vertical-align: -0.18em;
+  background: currentColor;
+  animation: blink 1s steps(1) infinite;
+}
+@keyframes blink {
+  50% {
+    opacity: 0;
+  }
+}

@@ -1,0 +1,65 @@
+/* Sections and their headings. */
+
+.section {
+  position: relative;
+  padding-block: clamp(80px, 11vw, 150px);
+}
+.section + .section {
+  border-top: 1.5px dashed var(--line);
+}
+/* the first thing on a page, right under the HUD */
+.section--first {
+  padding-top: clamp(48px, 7vw, 96px);
+}
+
+.section-head {
+  display: flex;
+  align-items: center;
+  gap: clamp(18px, 3vw, 34px);
+  margin-bottom: clamp(36px, 5vw, 60px);
+}
+.section-head .emblem {
+  --size: clamp(66px, 9vw, 112px);
+  transition: transform 0.6s var(--spring);
+}
+.section-head:hover .emblem {
+  transform: rotate(-12deg) scale(1.06);
+}
+.section-head__kicker {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.section-head__kicker b {
+  color: var(--ink);
+}
+.section-head__title {
+  margin-top: 10px;
+  font: 800 clamp(32px, 5.6vw, 66px)/1.02 var(--display);
+  letter-spacing: -0.035em;
+  text-wrap: balance;
+}
+.section-head__sub {
+  margin-top: 12px;
+  max-width: 40rem;
+  color: var(--ink-2);
+  font-size: clamp(16px, 1.6vw, 18px);
+}
+
+.subhead {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  margin: clamp(48px, 6vw, 72px) 0 20px;
+}
+.subhead h2,
+.subhead h3 {
+  font: 700 clamp(19px, 2vw, 23px)/1.2 var(--display);
+  letter-spacing: -0.02em;
+}
+.subhead::after {
+  content: '';
+  flex: 1;
+  border-top: 1.5px dashed var(--line);
+  translate: 0 -5px;
+}

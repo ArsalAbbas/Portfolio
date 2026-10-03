@@ -1,0 +1,35 @@
+---
+// The heading at the top of every section: an emblem, a numbered kicker, a title that decodes
+// itself the first time you see it, and an optional line underneath (or a slot, for links).
+import type { Hue, ShapeName } from '../../data/site'
+import Emblem from './Emblem.astro'
+
+interface Props {
+  n: string
+  shape: ShapeName
+  hue: Hue
+  kicker: string
+  title: string
+  sub?: string
+  /** h1 when the section is the first thing on its page */
+  as?: 'h1' | 'h2'
+}
+
+const { n, shape, hue, kicker, title, sub, as: Title = 'h2' } = Astro.props
+const hasSub = Boolean(sub) || Astro.slots.has('default')
+---
+
+<header class="section-head">
+  <Emblem shape={shape} hue={hue} />
+  <div>
+    <p class="eyebrow section-head__kicker"><b>{n}</b> / {kicker}</p>
+    <Title class="section-head__title" data-scramble>{title}</Title>
+    {hasSub && <p class="section-head__sub">{sub}<slot /></p>}
+  </div>
+</header>
+
+<script>
+  import { initScramble } from './scramble'
+
+  initScramble()
+</script>

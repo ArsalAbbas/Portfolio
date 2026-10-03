@@ -1,0 +1,36 @@
+---
+// The class picker: one tab per class. Each tab carries what the card needs to change outfit.
+import type { CharacterClass } from '../../data/character'
+import Shape from '../shared/Shape.astro'
+
+interface Props {
+  classes: CharacterClass[]
+}
+
+const { classes } = Astro.props
+---
+
+<div class="picker" role="tablist" aria-label="Categories">
+  {
+    classes.map((c, i) => (
+      <button
+        type="button"
+        role="tab"
+        id={`tab-${c.id}`}
+        aria-controls={`panel-${c.id}`}
+        aria-selected={i === 0 ? 'true' : 'false'}
+        tabindex={i === 0 ? 0 : -1}
+        data-class={c.id}
+        data-name={c.name}
+        data-hobby={c.hobby}
+        data-hue={c.hue}
+        data-lines={JSON.stringify(c.lines)}
+        style={`--hue: var(--${c.hue})`}
+      >
+        <Shape name={c.shape} size={18} />
+        <span>{c.name}</span>
+        <small>{c.hobby}</small>
+      </button>
+    ))
+  }
+</div>

@@ -1,0 +1,25 @@
+---
+// One blog post in a list: the date, the title, a line about it, and how long it takes to read.
+import { formatDate, postUrl, readingMinutes, type Post } from '../../lib/posts'
+
+interface Props {
+  post: Post
+}
+
+const { post } = Astro.props
+---
+
+<li>
+  <a class="card post-row" href={postUrl(post)}>
+    <time datetime={post.data.date.toISOString()}>{formatDate(post.data.date)}</time>
+    <h3>
+      {post.data.title}
+      {post.data.draft && <span class="draft">Draft</span>}
+    </h3>
+    <span class="arrow" aria-hidden="true">→</span>
+    <p>
+      {post.data.description}
+      <span class="post-row__meta"> · {readingMinutes(post.body)} min read</span>
+    </p>
+  </a>
+</li>

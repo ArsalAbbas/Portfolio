@@ -1,0 +1,17 @@
+---
+// The bottom of every page, with a small hint for keyboards: the spell for whichever theme
+// you're not in.
+import { site } from '../../data/site'
+
+const year = new Date().getFullYear()
+---
+
+<footer class="footer">
+  <div class="wrap">
+    <span>© {year} {site.fullName}. Made of circles, triangles, squares and crosses.</span>
+    <span>
+      <a href="/blog/">Blog</a> · <a href="/character/">Character</a> · <a href="/rss.xml">RSS</a>
+      <span class="footer__psst"> · psst: type <kbd class="footer__spell footer__spell--nox">nox</kbd><kbd class="footer__spell footer__spell--lumos">lumos</kbd></span>
+    </span>
+  </div>
+</footer>

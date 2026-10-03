@@ -1,0 +1,49 @@
+---
+// The bar along the top: my name, the four sections, and the light switch.
+import { sections, site } from '../../data/site'
+import Shape from '../shared/Shape.astro'
+---
+
+<header class="hud">
+  <div class="hud__bar wrap">
+    <a class="hud__brand" href="/" aria-label={`${site.name}, home`}>
+      <svg class="hud__glasses" viewBox="0 0 44 18" aria-hidden="true">
+        <rect x="2" y="3" width="16" height="12" rx="4"></rect>
+        <rect x="26" y="3" width="16" height="12" rx="4"></rect>
+        <path d="M18 8q4-3 8 0"></path>
+      </svg>
+      <span>{site.name}</span>
+    </a>
+
+    <nav class="hud__nav" aria-label="Sections">
+      {
+        sections.map((s) => (
+          <a class="hud__link" href={s.href} data-nav={s.id} style={`--hue: var(--${s.hue})`}>
+            <Shape name={s.shape} size={14} />
+            <span>{s.label}</span>
+            <kbd aria-hidden="true">{s.key}</kbd>
+          </a>
+        ))
+      }
+    </nav>
+
+    <div class="hud__tools">
+      <button class="hud__btn" type="button" data-theme-toggle aria-label="Switch between light and dark">
+        <svg class="theme-icon--moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true">
+          <path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5Z"></path>
+        </svg>
+        <svg class="theme-icon--sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+          <circle cx="12" cy="12" r="4.2"></circle>
+          <path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6"></path>
+        </svg>
+      </button>
+    </div>
+  </div>
+  <div class="hud__xp" aria-hidden="true"><span></span></div>
+</header>
+
+<script>
+  import { initHud } from './hud'
+
+  initHud()
+</script>

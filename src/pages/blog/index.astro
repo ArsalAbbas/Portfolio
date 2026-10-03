@@ -1,0 +1,45 @@
+---
+// The blog: every post, newest first, grouped by year.
+import NoPosts from '../../components/logbook/NoPosts.astro'
+import PostRow from '../../components/logbook/PostRow.astro'
+import SectionHead from '../../components/shared/SectionHead.astro'
+import Base from '../../layouts/Base.astro'
+import { getPosts, type Post } from '../../lib/posts'
+
+const posts = await getPosts()
+const years = new Map<number, Post[]>()
+for (const post of posts) {
+  const year = post.data.date.getUTCFullYear()
+  years.set(year, [...(years.get(year) ?? []), post])
+}
+---
+
+<Base title="Blog" description="Arsal’s blog: engineering write-ups on what I’m building, what broke, and what I learned fixing it.">
+  <header class="page-head wrap">
+    <SectionHead as="h1" n="03" shape="cross" hue="blue" kicker="Blog" title="Notes from the build">
+      Engineering write-ups: what I’m building, what broke, and what I learned fixing it. New posts land in the <a href="/rss.xml">RSS feed</a> first.
+    </SectionHead>
+  </header>
+
+  <section class="wrap logbook-list" data-section="blog">
+    {
+      posts.length ? (
+        [...years].map(([year, list]) => (
+          <div class="logbook-year">
+            <div class="subhead">
+              <h2>{year}</h2>
+              <span class="eyebrow">{list.length === 1 ? '1 post' : `${list.length} posts`}</span>
+            </div>
+            <ul class="posts">
+              {list.map((post) => (
+                <PostRow post={post} />
+              ))}
+            </ul>
+          </div>
+        ))
+      ) : (
+        <NoPosts />
+      )
+    }
+  </section>
+</Base>

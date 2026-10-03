@@ -1,0 +1,48 @@
+/* One-off pages: the 404. */
+
+.lost {
+  min-height: calc(100svh - var(--hud) - 120px);
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: 18px;
+  padding-block: 64px;
+  text-align: center;
+}
+.lost__code {
+  display: flex;
+  align-items: center;
+  gap: 0.08em;
+  font: 800 clamp(96px, 18vw, 200px)/1 var(--display);
+  letter-spacing: -0.06em;
+}
+.lost__code .emblem {
+  --size: 0.78em;
+}
+.lost h1 {
+  font: 800 clamp(30px, 5vw, 56px)/1.05 var(--display);
+  letter-spacing: -0.04em;
+  text-wrap: balance;
+}
+.lost > p:not(.lost__code) {
+  max-width: 32rem;
+  color: var(--ink-2);
+  font-size: 18px;
+}
+.lost__choices {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 14px;
+  margin-top: 10px;
+}
+.lost > p.lost__hint {
+  margin-top: 8px;
+  font-size: 12.5px;
+  color: var(--ink-3);
+}
+@media (pointer: coarse) {
+  .lost > p.lost__hint {
+    display: none;
+  }
+}

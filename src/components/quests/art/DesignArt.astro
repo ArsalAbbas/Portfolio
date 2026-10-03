@@ -1,0 +1,23 @@
+---
+// Sticky notes from a research session, and a pen tool drawing the curve that came out of it.
+---
+
+<svg class="art art--design" viewBox="0 0 320 120" aria-hidden="true">
+  <g class="design__note" style="--r: -6deg">
+    <rect x="22" y="22" width="56" height="56" rx="3" style="fill: var(--yellow)"></rect>
+    <path d="M31 38 H66 M31 48 H60 M31 58 H64" class="design__scribble"></path>
+  </g>
+  <g class="design__note" style="--r: 5deg; --d: -1.6s">
+    <rect x="242" y="46" width="56" height="56" rx="3" style="fill: var(--pink)"></rect>
+    <path d="M251 62 H286 M251 72 H280 M251 82 H284" class="design__scribble"></path>
+  </g>
+
+  <path class="design__handle" d="M88 92 L124 24 M222 70 L190 22"></path>
+  <path class="design__curve" d="M88 92 C124 24 190 22 222 70" pathLength="100"></path>
+  <g class="design__points">
+    <circle cx="124" cy="24" r="4.5" class="fill-hue"></circle>
+    <circle cx="190" cy="22" r="4.5" class="fill-hue"></circle>
+    <rect x="83" y="87" width="10" height="10" rx="1.5" class="fill-card"></rect>
+    <rect x="217" y="65" width="10" height="10" rx="1.5" class="fill-card"></rect>
+  </g>
+</svg>

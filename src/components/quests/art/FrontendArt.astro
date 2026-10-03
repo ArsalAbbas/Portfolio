@@ -1,0 +1,30 @@
+---
+// An interface putting itself together, and a cursor that comes along to press the button.
+---
+
+<svg class="art art--frontend" viewBox="0 0 320 120" aria-hidden="true">
+  <rect x="36" y="8" width="248" height="104" rx="10" class="fill-card"></rect>
+  <path d="M36 26 H284" class="fill-none"></path>
+  <circle cx="50" cy="17" r="3" style="fill: var(--red)"></circle>
+  <circle cx="60" cy="17" r="3" style="fill: var(--yellow)"></circle>
+  <circle cx="70" cy="17" r="3" style="fill: var(--green)"></circle>
+
+  <g class="frontend__block" style="--d: 0.2s">
+    <rect x="48" y="36" width="44" height="64" rx="6" class="fill-tint"></rect>
+    <path d="M56 48 H82 M56 58 H78 M56 68 H84" class="frontend__line"></path>
+  </g>
+  <rect class="frontend__block fill-faint" x="102" y="36" width="170" height="12" rx="4" style="--d: 0.5s"></rect>
+  {
+    [102, 160, 218].map((x, i) => (
+      <g class="frontend__block" style={`--d: ${0.8 + i * 0.25}s`}>
+        <rect x={x} y="56" width={i === 2 ? 54 : 50} height="30" rx="6" class="fill-card" />
+        <path d={`M${x + 8} 66 H${x + 30} M${x + 8} 76 H${x + 22}`} class="frontend__line" />
+      </g>
+    ))
+  }
+  <g class="frontend__block" style="--d: 1.7s">
+    <rect class="frontend__button fill-hue" x="102" y="92" width="58" height="14" rx="7"></rect>
+  </g>
+  <circle class="frontend__ripple" cx="131" cy="99" r="12"></circle>
+  <path class="frontend__cursor fill-card" d="M250 92 L250 112 L255 107 L259 116 L263 114 L259 105 L266 105 Z"></path>
+</svg>

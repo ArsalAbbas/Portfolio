@@ -1,0 +1,380 @@
+---
+// The hideout, at the bottom of the Character page: me at my desk with a laptop and a coffee,
+// under a shelf of books, discs and figures, by a window onto the hills. Poke anything and the
+// avatar has something to say about it (./room.ts). The lamp doubles as the light switch, and at
+// night the room goes dark around it. The figures are no one in particular.
+//
+// What's in `shelf` in src/data/character.ts goes on the shelf first, and plain spines and cases
+// fill the rest. Drawn in the avatar's ink and colours, whatever the theme; styles in ./room.css.
+import { shelf } from '../../data/character'
+import type { Hue, ShapeName } from '../../data/site'
+import Avatar from '../avatar/Avatar.astro'
+
+// the site's shapes, drawn in a 24 × 24 box, for stickers and marks on spines
+const SHAPE: Record<ShapeName, string> = {
+  circle: 'M12 2.8a9.2 9.2 0 1 1 0 18.4a9.2 9.2 0 1 1 0-18.4Z',
+  triangle: 'M12 2.8 21.6 20.2H2.4Z',
+  square: 'M5.2 3h13.6a2.2 2.2 0 0 1 2.2 2.2v13.6a2.2 2.2 0 0 1-2.2 2.2H5.2A2.2 2.2 0 0 1 3 18.8V5.2A2.2 2.2 0 0 1 5.2 3Z',
+  cross: 'M6.3 2.6 12 8.3l5.7-5.7 3.7 3.7L15.7 12l5.7 5.7-3.7 3.7L12 15.7l-5.7 5.7-3.7-3.7L8.3 12 2.6 6.3Z',
+  star: 'm12 1.8 3.1 6.6 7.2.8-5.4 4.9 1.5 7.1L12 17.6l-6.4 3.6 1.5-7.1-5.4-4.9 7.2-.8Z',
+}
+/** one of the shapes, `size` across, centred on x, y */
+const mark = (name: ShapeName, x: number, y: number, size: number) => ({
+  d: SHAPE[name],
+  transform: `translate(${x - size / 2} ${y - size / 2}) scale(${size / 24})`,
+})
+
+// the shelf, left to right: eight spines and two cases fit, and what I've chosen goes first
+const books = shelf.filter((s) => s.kind === 'book').slice(0, 8)
+const discs = shelf.filter((s) => s.kind === 'disc').slice(0, 2)
+const hues: Hue[] = ['yellow', 'blue', 'pink', 'green', 'red']
+const shapes: ShapeName[] = ['circle', 'triangle', 'square', 'cross']
+const SPINES: [number, number][] = [
+  [24, 78],
+  [28, 92],
+  [22, 70],
+  [26, 86],
+  [24, 80],
+  [26, 84],
+  [22, 72],
+  [28, 90],
+]
+const PLAN = ['caped', 'book', 'book', 'book', 'book', 'book', 'disc', 'robot', 'book', 'book', 'book', 'disc', 'plant'] as const
+/** a title on a spine, cut short if it won't fit */
+const fit = (title: string, h: number) => {
+  const n = Math.floor((h - 26) / 5.8)
+  return title.length > n ? `${title.slice(0, n - 1).trimEnd()}…` : title
+}
+
+type Slot =
+  | { kind: 'caped' | 'robot' | 'plant'; x: number }
+  | { kind: 'book'; x: number; w: number; h: number; hue: Hue; title?: string; shape: ShapeName }
+  | { kind: 'disc'; x: number; hue: Hue; title?: string }
+const slots: Slot[] = []
+let x = 290
+let b = 0
+let d = 0
+PLAN.forEach((what, i) => {
+  if (what === 'book') {
+    const [w, h] = SPINES[b]
+    slots.push({ kind: 'book', x, w, h, hue: books[b]?.hue ?? hues[(b * 2 + 1) % hues.length], title: books[b]?.title, shape: shapes[b % shapes.length] })
+    x += w + (PLAN[i + 1] === 'book' ? 2 : 10)
+    b++
+  } else if (what === 'disc') {
+    slots.push({ kind: 'disc', x, hue: discs[d]?.hue ?? (d ? 'blue' : 'pink'), title: discs[d]?.title })
+    x += 64
+    d++
+  } else {
+    slots.push({ kind: what, x })
+    x += what === 'caped' ? 54 : 52
+  }
+})
+
+const stars = [
+  [96, 98, 1],
+  [128, 128, 0.7],
+  [228, 156, 0.8],
+  [104, 168, 0.6],
+  [184, 84, 0.5],
+]
+---
+
+<div class="subhead"><h2>The hideout</h2><span class="eyebrow">Poke around</span></div>
+<div class="room" data-room>
+  <svg
+    class="room__scene"
+    viewBox="0 0 1000 560"
+    preserveAspectRatio="xMidYMid slice"
+    role="group"
+    aria-label="My desk: a laptop, a coffee, a lamp, a window onto the hills, and a shelf of books, discs and figures"
+  >
+    <defs>
+      <pattern id="room-dots" width="24" height="24" patternUnits="userSpaceOnUse">
+        <circle cx="12" cy="12" r="1.6" class="room__ink" stroke="none" opacity="0.12"></circle>
+      </pattern>
+      <clipPath id="room-pane"><rect x="72" y="72" width="164" height="236"></rect></clipPath>
+      <!-- at night: darker towards the edges, with the window left out so the moon stays bright -->
+      <radialGradient id="room-night" cx="0.7" cy="0.78" r="0.8">
+        <stop offset="0" stop-color="#0c0e29" stop-opacity="0"></stop>
+        <stop offset="0.3" stop-color="#0c0e29" stop-opacity="0.2"></stop>
+        <stop offset="1" stop-color="#0c0e29" stop-opacity="0.66"></stop>
+      </radialGradient>
+      <mask id="room-unlit">
+        <rect width="1000" height="560" fill="#fff"></rect>
+        <rect x="72" y="72" width="164" height="236" fill="#000"></rect>
+      </mask>
+      <linearGradient id="room-beam" gradientUnits="userSpaceOnUse" x1="812" y1="335" x2="650" y2="452">
+        <stop offset="0" stop-color="#ffe9a3" stop-opacity="0.8"></stop>
+        <stop offset="1" stop-color="#ffe9a3" stop-opacity="0.12"></stop>
+      </linearGradient>
+    </defs>
+
+    <!-- the wall -->
+    <rect class="room__wall" width="1000" height="560" stroke="none"></rect>
+    <rect width="1000" height="560" fill="url(#room-dots)" stroke="none"></rect>
+
+    <!-- the window: sun and a cloud by day, the moon and stars by night, hills either way -->
+    <g class="room__window" data-poke="window" role="button" tabindex="0" aria-label="The window">
+      <rect x="58" y="58" width="192" height="264" rx="10" class="room__paper"></rect>
+      <g clip-path="url(#room-pane)">
+        <rect class="room__sky" x="72" y="72" width="164" height="236" stroke="none"></rect>
+        <g class="room__day" stroke-width="3.5">
+          <circle cx="204" cy="106" r="17" class="room__sun"></circle>
+          <path
+            class="room__paper"
+            d="M88 154 H138 A11 11 0 0 0 138 132 A14 14 0 0 0 112 126 A11 11 0 0 0 92 133 A11 11 0 0 0 88 154 Z"
+          ></path>
+        </g>
+        <g class="room__night-sky">
+          <path class="room__moon" stroke-width="3.5" d="M206 90 A22 22 0 1 0 220 126 A17 17 0 1 1 206 90 Z"></path>
+          {
+            stars.map(([sx, sy, s]) => (
+              <path class="room__moon" stroke="none" transform={`translate(${sx} ${sy}) scale(${s})`} d="M0-7 1.8-1.8 7 0 1.8 1.8 0 7-1.8 1.8-7 0-1.8-1.8Z" />
+            ))
+          }
+        </g>
+        <path class="room__far" stroke-width="3.5" d="M66 316 V246 L110 196 L138 224 L176 168 L214 220 L242 198 V316 Z"></path>
+        <path class="room__paper" stroke-width="3" d="M176 168 L163 187 L171 184 L177 192 L183 184 L190 187 Z"></path>
+        <path class="room__near" stroke-width="3.5" d="M66 316 V284 Q112 248 156 278 Q198 304 242 268 V316 Z"></path>
+      </g>
+      <rect x="72" y="72" width="164" height="236" fill="none"></rect>
+      <path d="M154 72 V308 M72 190 H236" fill="none" stroke-width="5"></path>
+      <rect x="44" y="320" width="220" height="14" rx="5" class="room__wood"></rect>
+    </g>
+
+    <!-- a little figure on the sill, looking out -->
+    <g class="room__item" data-poke="figure" transform="translate(158 320) scale(0.8)" aria-hidden="true">
+      <g class="room__lift">
+        <ellipse cx="22" cy="-3" rx="20" ry="4.5" class="room__ink" stroke="none"></ellipse>
+        <path d="M30 -60 Q46 -62 52 -52 M30 -58 Q44 -50 46 -40" fill="none" stroke-width="5" style="stroke: var(--red)"></path>
+        <path d="M17 -24 V-7 M27 -24 V-7 M13 -46 L7 -28 M31 -46 L37 -28" fill="none" stroke-width="7"></path>
+        <rect x="11" y="-52" width="22" height="30" rx="7" class="room__suit"></rect>
+        <circle cx="22" cy="-62" r="11" class="room__suit"></circle>
+        <rect x="11.5" y="-66" width="21" height="7" rx="3.5" class="room__paper" stroke="none"></rect>
+        <circle cx="18" cy="-62.5" r="1.8" class="room__ink" stroke="none"></circle>
+        <circle cx="26" cy="-62.5" r="1.8" class="room__ink" stroke="none"></circle>
+        <rect x="11" y="-73" width="22" height="5" rx="2.5" style="fill: var(--red)" stroke-width="2.5"></rect>
+      </g>
+    </g>
+
+    <!-- the clock, on India time -->
+    <g class="room__clock" data-poke="clock" role="button" tabindex="0" aria-label="The clock">
+      <circle cx="880" cy="92" r="36" class="room__paper"></circle>
+      <path d="M880 62 v7 M880 115 v7 M850 92 h7 M903 92 h7" stroke-width="3"></path>
+      <path data-hour d="M880 92 V74" stroke-width="5" transform="rotate(305 880 92)"></path>
+      <path data-minute d="M880 92 V66" stroke-width="3.5" transform="rotate(60 880 92)"></path>
+      <circle cx="880" cy="92" r="3.5" class="room__ink" stroke="none"></circle>
+    </g>
+
+    <!-- sticky notes: a list, a tick, a wireframe, a face -->
+    <g class="room__notes" data-poke="notes" role="button" tabindex="0" aria-label="Sticky notes" stroke-width="3">
+      <g transform="rotate(-4 836 178)">
+        <rect x="812" y="154" width="48" height="48" rx="2" style="fill: var(--yellow)"></rect>
+        <path d="M821 168 h30 M821 178 h24 M821 188 h28" fill="none" stroke-width="2.5" opacity="0.6"></path>
+      </g>
+      <g transform="rotate(3 896 176)">
+        <rect x="872" y="152" width="48" height="48" rx="2" style="fill: var(--pink)"></rect>
+        <path d="M884 177 l7 7 l15 -15" fill="none" stroke-width="3.5"></path>
+      </g>
+      <g transform="rotate(2 840 238)">
+        <rect x="816" y="214" width="48" height="48" rx="2" class="room__note-blue"></rect>
+        <rect x="824" y="222" width="32" height="13" rx="2" fill="none" stroke-width="2.5"></rect>
+        <path d="M824 244 h22 M824 252 h28" fill="none" stroke-width="2.5" opacity="0.6"></path>
+      </g>
+      <g transform="rotate(-3 900 236)">
+        <rect x="876" y="212" width="48" height="48" rx="2" style="fill: var(--green)"></rect>
+        <circle cx="893" cy="230" r="2.6" class="room__ink" stroke="none"></circle>
+        <circle cx="907" cy="230" r="2.6" class="room__ink" stroke="none"></circle>
+        <path d="M891 240 Q900 248 909 240" fill="none" stroke-width="3"></path>
+      </g>
+    </g>
+
+    <!-- the shelf -->
+    <path class="room__ink" d="M312 126 H340 L312 152 Z M760 126 H732 L760 152 Z"></path>
+    {
+      slots.map((s) => {
+        if (s.kind === 'book')
+          return (
+            <g
+              class="room__item room__book"
+              data-poke="book"
+              data-title={s.title}
+              transform={`translate(${s.x} 112)`}
+              role={s.title ? 'button' : undefined}
+              tabindex={s.title ? 0 : undefined}
+              aria-label={s.title}
+              aria-hidden={s.title ? undefined : 'true'}
+            >
+              <g class="room__lift">
+                <rect x="0" y={-s.h} width={s.w} height={s.h} rx="3" style={`fill: var(--${s.hue})`} />
+                <path d={`M0 ${-s.h + 9} H${s.w} M0 -9 H${s.w}`} stroke-width="3" />
+                {s.title ? (
+                  <text class="room__spine" transform={`translate(${s.w / 2} ${-s.h / 2}) rotate(-90)`}>
+                    {fit(s.title, s.h)}
+                  </text>
+                ) : (
+                  <path class="room__paper" stroke-width="2" vector-effect="non-scaling-stroke" {...mark(s.shape, s.w / 2, -s.h / 2, 12)} />
+                )}
+              </g>
+            </g>
+          )
+        if (s.kind === 'disc')
+          return (
+            <g
+              class="room__item room__disc"
+              data-poke="disc"
+              data-title={s.title}
+              transform={`translate(${s.x} 112)`}
+              role={s.title ? 'button' : undefined}
+              tabindex={s.title ? 0 : undefined}
+              aria-label={s.title}
+              aria-hidden={s.title ? undefined : 'true'}
+            >
+              <g class="room__lift">
+                <g class="room__cd" stroke-width="3">
+                  <circle cx="27" cy="-50" r="22" class="room__silver" />
+                  <circle cx="27" cy="-50" r="5" class="room__paper" />
+                </g>
+                <rect x="0" y="-54" width="54" height="54" rx="3" class="room__paper" />
+                <rect x="11" y="-50" width="39" height="46" rx="2" style={`fill: var(--${s.hue})`} stroke-width="2.5" />
+                <circle cx="30.5" cy="-27" r="13" fill="none" stroke-width="2.5" />
+                <circle cx="30.5" cy="-27" r="5.5" class="room__ink" stroke="none" />
+                <path d="M6 -54 V0" stroke-width="2.5" />
+              </g>
+            </g>
+          )
+        if (s.kind === 'caped')
+          return (
+            <g class="room__item" data-poke="figure" transform={`translate(${s.x} 112)`} role="button" tabindex="0" aria-label="A caped figure">
+              <g class="room__lift" stroke-width="3">
+                <ellipse cx="22" cy="-3" rx="20" ry="4.5" class="room__ink" stroke="none" />
+                <path d="M12 -50 L32 -50 L42 -8 L2 -8 Z" style="fill: var(--red)" />
+                <path d="M17 -24 V-7 M27 -24 V-7 M13 -46 L7 -30 M31 -46 L38 -64" fill="none" stroke-width="7" />
+                <circle cx="38.5" cy="-66" r="4.5" class="room__paper" />
+                <rect x="11" y="-52" width="22" height="30" rx="7" style="fill: var(--blue)" />
+                <path style="fill: var(--yellow)" stroke-width="2" vector-effect="non-scaling-stroke" {...mark('star', 22, -39, 13)} />
+                <circle cx="22" cy="-62" r="10" class="room__paper" />
+                <rect x="12" y="-66" width="20" height="7" rx="3.5" class="room__ink" stroke="none" />
+                <circle cx="18" cy="-62.5" r="1.6" class="room__paper" stroke="none" />
+                <circle cx="26" cy="-62.5" r="1.6" class="room__paper" stroke="none" />
+              </g>
+            </g>
+          )
+        if (s.kind === 'robot')
+          return (
+            <g class="room__item" data-poke="figure" transform={`translate(${s.x} 112)`} role="button" tabindex="0" aria-label="A little robot">
+              <g class="room__lift" stroke-width="3">
+                <ellipse cx="21" cy="-3" rx="19" ry="4.5" class="room__ink" stroke="none" />
+                <path d="M14 -22 V-6 M28 -22 V-6 M21 -66 V-74" fill="none" stroke-width="6" />
+                <circle cx="21" cy="-77" r="3.5" style="fill: var(--red)" stroke-width="2.5" />
+                <rect x="-2" y="-46" width="8" height="20" rx="4" style="fill: var(--blue)" />
+                <rect x="36" y="-46" width="8" height="20" rx="4" style="fill: var(--blue)" />
+                <rect x="5" y="-50" width="32" height="30" rx="6" style="fill: var(--yellow)" stroke-width="3.5" />
+                <circle cx="21" cy="-35" r="5" style="fill: var(--red)" stroke-width="2.5" />
+                <rect x="9" y="-68" width="24" height="18" rx="5" class="room__paper" stroke-width="3.5" />
+                <circle cx="16.5" cy="-59" r="2.6" class="room__ink" stroke="none" />
+                <circle cx="25.5" cy="-59" r="2.6" class="room__ink" stroke="none" />
+              </g>
+            </g>
+          )
+        return (
+          <g class="room__item" data-poke="plant" transform={`translate(${s.x} 112)`} aria-hidden="true">
+            <g class="room__lift" stroke-width="3">
+              <ellipse cx="22" cy="-34" rx="9" ry="5.5" transform="rotate(-35 22 -34)" class="room__leaf" />
+              <ellipse cx="9" cy="-36" rx="8" ry="5" transform="rotate(30 9 -36)" class="room__leaf" />
+              <path d="M2 -26 H30 L26 0 H6 Z" class="room__pot" stroke-width="3.5" />
+              <rect x="0" y="-31" width="32" height="7" rx="3" class="room__pot" stroke-width="3.5" />
+            </g>
+          </g>
+        )
+      })
+    }
+    <rect x="276" y="112" width="520" height="14" rx="4" class="room__wood"></rect>
+    <!-- the plant's trailing leaves hang over the front of the shelf -->
+    <g class="room__trail" stroke-width="3" aria-hidden="true">
+      <path d="M778 82 C770 108 768 140 774 178" fill="none"></path>
+      <ellipse cx="769" cy="138" rx="8" ry="5" transform="rotate(70 769 138)" class="room__leaf"></ellipse>
+      <ellipse cx="779" cy="156" rx="8" ry="5" transform="rotate(-50 779 156)" class="room__leaf"></ellipse>
+      <ellipse cx="771" cy="178" rx="8" ry="5" transform="rotate(80 771 178)" class="room__leaf"></ellipse>
+    </g>
+
+    <!-- me -->
+    <g class="room__me">
+      <Avatar id="room" at={{ x: 330, y: 123, width: 340, height: 329 }} />
+    </g>
+
+    <!-- the desk -->
+    <rect x="-10" y="452" width="1020" height="18" class="room__wood"></rect>
+    <rect x="-10" y="470" width="1020" height="100" class="room__wood-2"></rect>
+    <rect x="120" y="488" width="220" height="52" rx="6" class="room__wood"></rect>
+    <rect x="660" y="488" width="220" height="52" rx="6" class="room__wood"></rect>
+    <rect x="205" y="508" width="50" height="10" rx="5" class="room__ink" stroke="none"></rect>
+    <rect x="745" y="508" width="50" height="10" rx="5" class="room__ink" stroke="none"></rect>
+
+    <!-- on the desk, left to right -->
+    <g class="room__item" data-poke="plant" role="button" tabindex="0" aria-label="A plant">
+      <g class="room__lift" stroke-width="3.5">
+        <ellipse cx="118" cy="388" rx="12" ry="25" transform="rotate(-28 118 388)" class="room__leaf"></ellipse>
+        <ellipse cx="154" cy="384" rx="12" ry="26" transform="rotate(24 154 384)" class="room__leaf"></ellipse>
+        <ellipse cx="136" cy="372" rx="11" ry="28" class="room__leaf"></ellipse>
+        <path d="M136 400 V352 M126 404 L112 372 M146 404 L160 370" fill="none" stroke-width="2.5" opacity="0.5"></path>
+        <path d="M112 420 H160 L154 452 H118 Z" class="room__pot"></path>
+        <rect x="108" y="414" width="56" height="9" rx="4" class="room__pot"></rect>
+      </g>
+    </g>
+    <g aria-hidden="true">
+      <rect x="232" y="438" width="86" height="14" rx="2" style="fill: var(--blue)"></rect>
+      <rect x="240" y="424" width="70" height="14" rx="2" style="fill: var(--pink)"></rect>
+      <path d="M300 438 V452 M246 424 V438" stroke-width="2.5" opacity="0.5"></path>
+    </g>
+    <g aria-hidden="true" stroke-width="3">
+      <rect x="342" y="374" width="8" height="46" rx="2" transform="rotate(-12 346 420)" style="fill: var(--red)"></rect>
+      <rect x="355" y="366" width="8" height="52" rx="2" style="fill: var(--blue)"></rect>
+      <rect x="366" y="378" width="8" height="44" rx="2" transform="rotate(12 370 420)" style="fill: var(--green)"></rect>
+      <rect x="340" y="412" width="38" height="40" rx="5" style="fill: var(--yellow)"></rect>
+      <path d="M346 424 h26" stroke-width="2.5" opacity="0.5"></path>
+    </g>
+
+    <g class="room__laptop" data-poke="laptop" role="button" tabindex="0" aria-label="The laptop">
+      <rect x="422" y="350" width="156" height="98" rx="9" class="room__silver"></rect>
+      <path class="room__sticker" style="fill: var(--green)" {...mark('triangle', 500, 375, 19)}></path>
+      <path class="room__sticker" style="fill: var(--red)" {...mark('circle', 524, 398, 19)}></path>
+      <path class="room__sticker" style="fill: var(--blue)" {...mark('cross', 500, 421, 19)}></path>
+      <path class="room__sticker" style="fill: var(--pink)" {...mark('square', 476, 398, 19)}></path>
+      <rect x="406" y="444" width="188" height="9" rx="3" class="room__silver-2"></rect>
+    </g>
+
+    <g class="room__item" data-poke="mug" role="button" tabindex="0" aria-label="A mug of coffee">
+      <g class="room__lift">
+        <g class="room__steam" fill="none" stroke-width="3.5">
+          <path d="M630 398 q-7 -10 0 -20 q7 -10 0 -20"></path>
+          <path d="M650 398 q-7 -10 0 -20 q7 -10 0 -20"></path>
+        </g>
+        <path d="M662 422 q18 0 18 12 q0 12 -18 12" fill="none" stroke-width="6"></path>
+        <rect x="618" y="410" width="46" height="42" rx="6" style="fill: var(--red)"></rect>
+        <path class="room__paper" stroke-width="2.5" vector-effect="non-scaling-stroke" {...mark('circle', 641, 431, 15)}></path>
+      </g>
+    </g>
+
+    <g class="room__lamp" data-poke="lamp" role="button" tabindex="0" aria-label="The lamp. It’s also the light switch.">
+      <rect x="786" y="286" width="148" height="168" fill="transparent" stroke="none"></rect>
+      <path d="M890 444 L916 350 L846 298" fill="none" stroke-width="8"></path>
+      <circle cx="916" cy="350" r="7" style="fill: var(--blue)" stroke-width="3"></circle>
+      <ellipse class="room__bulb" cx="812.3" cy="334.9" rx="27" ry="7" transform="rotate(42.4 812.3 334.9)" stroke-width="3"></ellipse>
+      <path d="M835.2 293.5 L851.4 308.3 L833 353.8 L791.6 316 Z" style="fill: var(--blue)"></path>
+      <circle cx="846" cy="298" r="6" style="fill: var(--blue)" stroke-width="3"></circle>
+      <rect x="852" y="440" width="76" height="13" rx="6" style="fill: var(--blue)"></rect>
+    </g>
+
+    <!-- night: everything dims but the window, and the lamp lights the desk -->
+    <rect class="room__dark" width="1000" height="560" fill="url(#room-night)" mask="url(#room-unlit)" stroke="none"></rect>
+    <path class="room__beam" d="M791.6 316 L833 353.8 L793 452 L528 452 Z" fill="url(#room-beam)" stroke="none"></path>
+  </svg>
+  <p class="bubble is-hidden" data-room-bubble aria-live="polite"></p>
+</div>
+
+<script>
+  import { initRoom } from './room'
+
+  initRoom()
+</script>

@@ -1,0 +1,34 @@
+---
+// Travel: a little plane flying from home, past a string of stops, to wherever's next,
+// over a photo from a trip. The stops have no names on purpose. The flying is all CSS, in
+// ./widgets.css.
+import { Image } from 'astro:assets'
+import hills from '../../../assets/photos/hills.webp'
+
+// points along the arc, which is centred on 150,172 with a radius of 140
+const stops = [128, 116, 104, 92, 80, 68].map((deg) => {
+  const a = (deg * Math.PI) / 180
+  return { x: (150 + 140 * Math.cos(a)).toFixed(1), y: (172 - 140 * Math.sin(a)).toFixed(1) }
+})
+---
+
+<div class="widget" data-widget="route">
+  <svg class="route" viewBox="0 0 300 104" aria-hidden="true">
+    <path class="route__path" d="M42.75 82 A140 140 0 0 1 257.25 82"></path>
+    <path class="route__trail" d="M42.75 82 A140 140 0 0 1 257.25 82" pathLength="1"></path>
+    {stops.map((s) => <circle class="route__stop" cx={s.x} cy={s.y} r="3.5"></circle>)}
+    <circle class="route__pin" cx="42.75" cy="82" r="6"></circle>
+    <circle class="route__pin route__pin--next" cx="257.25" cy="82" r="6"></circle>
+    <text class="route__label" x="42.75" y="101">Home</text>
+    <text class="route__label" x="257.25" y="101">Next?</text>
+    <g class="route__plane">
+      <path
+        d="M163 32 c0 -1.7 -1.4 -2.5 -3 -2.5 h-5 l-6.5 -8.5 h-3.5 l3 8.5 h-7.5 l-2.8 -3.6 h-2.7 l1.6 6.1 l-1.6 6.1 h2.7 l2.8 -3.6 h7.5 l-3 8.5 h3.5 l6.5 -8.5 h5 c1.6 0 3 -0.8 3 -2.5 z"
+      ></path>
+    </g>
+  </svg>
+  <div class="trip">
+    <Image src={hills} alt="Arsal on a misty hilltop, hills behind" widths={[240]} sizes="112px" />
+    <p>Somewhere misty, somewhere high. One of 15+ places so far.</p>
+  </div>
+</div>

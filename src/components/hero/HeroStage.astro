@@ -1,0 +1,24 @@
+---
+// The right half of the title screen: the avatar in front of a moiré orb, a speech bubble,
+// and one throwable shape for each section. Clicking a shape goes to its section.
+import { heroLines } from '../../data/character'
+import { sections } from '../../data/site'
+import Avatar from '../avatar/Avatar.astro'
+import Shape from '../shared/Shape.astro'
+
+const sizes = [92, 84, 88, 80]
+---
+
+<div class="hero__stage" data-stage>
+  <div class="hero__orb" data-orb aria-hidden="true"><div class="hero__ripple" data-ripple></div></div>
+  <div class="hero__avatar"><Avatar id="hero" /></div>
+  <p class="bubble" data-bubble data-lines={JSON.stringify(heroLines)} aria-live="polite">{heroLines[0]}</p>
+  {
+    sections.map((s, i) => (
+      <a class="toy" href={s.href} data-toy data-home={i} style={`--hue: var(--${s.hue}); --s: ${sizes[i]}px`} aria-label={`Go to ${s.label}`}>
+        <Shape name={s.shape} size={84} />
+        <span class="toy__label">{s.label}</span>
+      </a>
+    ))
+  }
+</div>

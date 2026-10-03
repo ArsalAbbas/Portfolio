@@ -1,0 +1,218 @@
+/* Character select: the card, the picker and the panels. The room below them is in ./room.css. */
+
+.character {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: clamp(24px, 4vw, 48px);
+  align-items: start;
+}
+
+/* the card on the left: the avatar, its speech bubble and nameplate */
+.character__stage {
+  position: sticky;
+  top: calc(var(--hud) + 24px);
+  padding: 18px;
+  --hue: var(--pink);
+}
+.character__frame {
+  position: relative;
+  aspect-ratio: 1;
+  border: var(--stroke) solid var(--ink);
+  border-radius: 12px;
+  overflow: hidden;
+  background-color: var(--paper);
+  transition: --hue 0.4s;
+}
+/* the checks drift sideways: a layer slides one tile along and starts over, which looks the
+   same and is much cheaper than redrawing the pattern every frame */
+.character__frame::before {
+  content: '';
+  position: absolute;
+  inset: 0 0 0 -44px;
+  background-image: repeating-conic-gradient(
+    color-mix(in srgb, var(--hue) 55%, var(--paper)) 0 25%,
+    transparent 0 50%
+  );
+  background-size: 44px 44px;
+  animation: checks 12s linear infinite;
+}
+@keyframes checks {
+  to {
+    translate: 44px 0;
+  }
+}
+.character__frame .avatar {
+  position: absolute;
+  left: 50%;
+  bottom: -2%;
+  width: 92%;
+  translate: -50% 0;
+  cursor: pointer;
+  transition: opacity 0.3s;
+}
+.character__stage .bubble {
+  left: 26px;
+  top: 26px;
+}
+/* the photo behind the drawing */
+.character__photo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 30%;
+  opacity: 0;
+  scale: 1.08;
+  transition:
+    opacity 0.4s var(--ease),
+    scale 0.6s var(--ease);
+  pointer-events: none;
+}
+.character__frame.is-true .character__photo {
+  opacity: 1;
+  scale: 1;
+}
+.character__frame.is-true .avatar {
+  opacity: 0;
+}
+.character__true {
+  margin-top: 14px;
+}
+.nameplate {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 16px;
+  padding: 2px 4px 0;
+}
+.nameplate strong {
+  font: 800 clamp(20px, 2.2vw, 26px)/1.1 var(--display);
+  letter-spacing: -0.03em;
+}
+.nameplate span {
+  color: var(--ink-2);
+  white-space: nowrap;
+}
+
+/* the class picker: two rows of four */
+.picker {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+}
+.picker button {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+  padding: 12px 12px 11px;
+  border: 1.5px solid var(--ink);
+  border-radius: 13px;
+  background: var(--card);
+  text-align: left;
+  transition:
+    transform 0.25s var(--spring),
+    box-shadow 0.2s,
+    background 0.2s;
+}
+.picker button:hover {
+  transform: translateY(-3px);
+  box-shadow: 3px 3px 0 var(--shadow);
+}
+.picker button[aria-selected='true'] {
+  background: var(--hue);
+  color: var(--on-hue);
+  box-shadow: 4px 4px 0 var(--shadow);
+  transform: translateY(-3px);
+}
+.picker button[aria-selected='true'] .shape {
+  --hue: var(--card);
+}
+.picker span {
+  font: 700 13.5px/1.1 var(--display);
+  letter-spacing: -0.01em;
+}
+.picker small {
+  font: 500 11px/1.2 var(--mono);
+  opacity: 0.72;
+}
+
+/* the panel under the picker: about the class, and its toy */
+.panel {
+  margin-top: 26px;
+  animation: panel-in 0.45s var(--spring);
+}
+.panel[hidden] {
+  display: none;
+}
+@keyframes panel-in {
+  from {
+    opacity: 0;
+    translate: 0 10px;
+  }
+}
+.panel h2 {
+  font: 800 clamp(24px, 2.8vw, 32px)/1.1 var(--display);
+  letter-spacing: -0.03em;
+}
+.panel > p {
+  margin-top: 12px;
+  color: var(--ink-2);
+  font-size: 17px;
+  text-wrap: pretty;
+}
+.panel__costume {
+  margin-top: 18px;
+}
+.panel > p.panel__psst {
+  margin-top: 14px;
+  font: 500 12.5px/1.5 var(--mono);
+}
+/* hints about typing are no use on a touchscreen */
+@media (pointer: coarse) {
+  .panel__psst {
+    display: none;
+  }
+}
+.panel__photo {
+  width: 220px;
+  height: auto;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  margin-top: 18px;
+  border: var(--stroke) solid var(--ink);
+  border-radius: 14px;
+  rotate: -2deg;
+  box-shadow: 5px 5px 0 var(--hue, var(--shadow));
+}
+.widget {
+  margin-top: 24px;
+  padding: 20px;
+  border: var(--stroke) solid var(--ink);
+  border-radius: var(--radius);
+  background: var(--card);
+}
+.widget__title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+@media (max-width: 960px) {
+  .character {
+    grid-template-columns: 1fr;
+  }
+  .character__stage {
+    position: relative;
+    top: 0;
+    max-width: 460px;
+  }
+  .picker {
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  }
+}

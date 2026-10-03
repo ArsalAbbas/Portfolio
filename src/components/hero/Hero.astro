@@ -1,0 +1,53 @@
+---
+// The title screen: who I am, a level bar for years on the job, and a stage with the avatar
+// and four shapes you can throw.
+import { level, links, site } from '../../data/site'
+import HeroStage from './HeroStage.astro'
+
+const lvl = level()
+// each letter of my name pops a different colour when you hover it
+const pops = ['var(--red)', 'var(--green)', 'var(--pink)', 'var(--blue)', 'var(--yellow)']
+const letters = (word: string, offset: number) =>
+  [...word].map((ch, i) => ({ ch, pop: pops[(i + offset) % pops.length], tilt: `${(i % 2 ? 1 : -1) * (4 + ((i * 7) % 6))}deg` }))
+---
+
+<section class="hero" id="top" data-hero data-section="top">
+  <div class="wrap hero__grid">
+    <div class="hero__copy">
+      <p class="eyebrow hero__status">
+        <span class="dot" aria-hidden="true"></span>
+        <span data-status>Online</span><span aria-hidden="true">·</span><span>{site.location}</span><span aria-hidden="true">·</span>
+        <span><time data-clock>--:--</time> IST</span>
+      </p>
+      <h1 class="hero__name" aria-label={site.name}>
+        <span class="word" aria-hidden="true">
+          {letters('Arsal', 0).map((l) => <span class="ch" style={`--pop: ${l.pop}; --tilt: ${l.tilt}`}>{l.ch}</span>)}
+        </span>
+      </h1>
+      <p class="hero__role">
+        <strong>{site.role}</strong> at <a href={site.companyUrl} target="_blank" rel="noreferrer">{site.company}</a>.
+        {' '}{site.tagline}
+      </p>
+      <p class="hero__level mono" title="Levels are years shipping in production. The bar fills toward the next one.">
+        <span>LVL <b data-lvl>{lvl.lvl}</b></span>
+        <span class="xpbar" aria-hidden="true"><i data-xp style={`--p: ${lvl.progress.toFixed(3)}`}></i></span>
+        <span data-next>Next level {lvl.next.toLocaleDateString('en-GB', { month: 'short', year: 'numeric' })}</span>
+      </p>
+      <div class="hero__cta">
+        <a class="btn" href="#quests" data-start>Press <span class="key" aria-hidden="true">✕</span><span class="sr-only">X</span> to start</a>
+        <ul class="hero__links">
+          {links.map((l) => <li><a href={l.href} target="_blank" rel="noreferrer">{l.label}</a></li>)}
+        </ul>
+      </div>
+    </div>
+
+    <HeroStage />
+  </div>
+  <p class="hero__hint mono" aria-hidden="true">Throw the shapes · or scroll ↓</p>
+</section>
+
+<script>
+  import { initHero } from './hero'
+
+  initHero()
+</script>

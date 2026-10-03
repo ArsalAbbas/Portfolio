@@ -1,0 +1,30 @@
+---
+import type { ShapeName } from '../../data/site'
+
+interface Props {
+  name: ShapeName
+  size?: number
+  outline?: boolean
+  class?: string
+}
+
+const { name, size = 24, outline = false, class: className } = Astro.props
+---
+
+<svg
+  class:list={['shape', `shape--${name}`, outline && 'shape--outline', className]}
+  width={size}
+  height={size}
+  viewBox="0 0 24 24"
+  aria-hidden="true"
+>
+  {name === 'circle' && <circle cx="12" cy="12" r="9.2" />}
+  {name === 'triangle' && <path d="M12 2.8 21.6 20.2H2.4Z" />}
+  {name === 'square' && <rect x="3" y="3" width="18" height="18" rx="2.2" />}
+  {
+    name === 'cross' && (
+      <path d="M6.3 2.6 12 8.3l5.7-5.7 3.7 3.7L15.7 12l5.7 5.7-3.7 3.7L12 15.7l-5.7 5.7-3.7-3.7L8.3 12 2.6 6.3Z" />
+    )
+  }
+  {name === 'star' && <path d="m12 1.8 3.1 6.6 7.2.8-5.4 4.9 1.5 7.1L12 17.6l-6.4 3.6 1.5-7.1-5.4-4.9 7.2-.8Z" />}
+</svg>

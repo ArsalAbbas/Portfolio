@@ -1,0 +1,39 @@
+---
+// A conversation, turn by turn: you talk, there's a short gap, and the agent answers.
+const you = [10, 18, 26, 14, 30, 22, 12, 28, 34, 20, 16, 26, 12, 22, 30, 18, 10]
+const agent = [12, 22, 30, 16, 26, 34, 18, 24, 14, 28, 20, 12, 18, 10]
+---
+
+<svg class="art art--voice" viewBox="0 0 320 120" aria-hidden="true">
+  <path class="voice__track" d="M48 36 H164 M178 86 H273"></path>
+
+  <g class="voice__face">
+    <circle cx="24" cy="36" r="14" class="fill-card"></circle>
+    <circle cx="19.5" cy="34" r="1.9" class="fill-ink"></circle>
+    <circle cx="28.5" cy="34" r="1.9" class="fill-ink"></circle>
+    <path d="M19 40 q5 4.5 10 0" class="fill-none"></path>
+  </g>
+  <text class="art__label" x="24" y="64">you</text>
+  <g class="voice__row voice__row--you">
+    {you.map((h, i) => <rect class="voice__bar" x={48 + i * 7} y={36 - h / 2} width="4" height={h} rx="2" style={`--d: ${(-i * 0.13).toFixed(2)}s`} />)}
+  </g>
+
+  <g class="voice__gap">
+    <path d="M164 54 v8 M164 58 H178 M178 54 v8"></path>
+    <text class="art__label" x="171" y="50">0.2 s</text>
+  </g>
+
+  <g class="voice__row voice__row--agent">
+    {agent.map((h, i) => <rect class="voice__bar" x={178 + i * 7} y={86 - h / 2} width="4" height={h} rx="2" style={`--d: ${(-i * 0.11).toFixed(2)}s`} />)}
+  </g>
+  <g class="voice__face">
+    <path d="M296 72 V64" class="fill-none"></path>
+    <circle cx="296" cy="62" r="3" class="fill-hue"></circle>
+    <rect x="282" y="73" width="28" height="26" rx="7" class="fill-hue"></rect>
+    <circle cx="291" cy="85" r="2" class="fill-ink"></circle>
+    <circle cx="301" cy="85" r="2" class="fill-ink"></circle>
+  </g>
+  <text class="art__label" x="296" y="114">agent</text>
+
+  <path class="voice__playhead" d="M48 14 V106"></path>
+</svg>

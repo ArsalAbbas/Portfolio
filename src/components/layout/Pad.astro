@@ -1,0 +1,15 @@
+---
+// On phones the section links move to a controller along the bottom of the screen.
+import { sections } from '../../data/site'
+import Shape from '../shared/Shape.astro'
+---
+
+<nav class="pad" aria-label="Sections">
+  {
+    sections.map((s) => (
+      <a href={s.href} data-nav={s.id} style={`--hue: var(--${s.hue})`} aria-label={s.label}>
+        <Shape name={s.shape} size={24} />
+      </a>
+    ))
+  }
+</nav>

@@ -1,0 +1,27 @@
+---
+// One skill on a branch: its official logo (or a drawn glyph) and its name. Filled nodes are
+// the daily drivers.
+import type { Skill } from '../../data/skills'
+import { glyphs } from './glyphs'
+
+interface Props {
+  skill: Skill
+  /** its place along the branch, for the power-up animation */
+  i: number
+}
+
+const { skill, i } = Astro.props
+---
+
+<li class:list={['node', skill.core && 'is-core']} style={`--i: ${i}`}>
+  <span class="node__mark" aria-hidden="true">
+    {
+      skill.logo ? (
+        <img src={`/logos/${skill.logo}.svg`} alt="" width="16" height="16" loading="lazy" decoding="async" />
+      ) : (
+        skill.glyph && <svg viewBox="0 0 24 24" set:html={glyphs[skill.glyph]} />
+      )
+    }
+  </span>
+  {skill.name}
+</li>

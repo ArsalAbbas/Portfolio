@@ -1,0 +1,21 @@
+---
+// A big op-art shape whose pattern moves while it's on screen. Section headings wear one each.
+import type { Hue, ShapeName } from '../../data/site'
+
+interface Props {
+  shape: ShapeName
+  hue: Hue
+  class?: string
+}
+
+const { shape, hue, class: className } = Astro.props
+---
+
+<span class:list={['emblem', `emblem--${shape}`, className]} style={`--hue: var(--${hue})`} aria-hidden="true"></span>
+
+<script>
+  import { $$, whileVisible } from '../../scripts/util'
+
+  // the patterns are redrawn on every frame they move, so only the ones you can see move
+  for (const el of $$('.emblem')) whileVisible(el, (on) => el.classList.toggle('is-playing', on))
+</script>

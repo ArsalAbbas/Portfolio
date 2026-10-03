@@ -1,0 +1,73 @@
+---
+// Food: a roulette for when nobody can decide, spun by ./dishes.ts.
+import { dishes } from '../../../data/character'
+---
+
+<div class="widget" data-widget="dishes">
+  <div class="dish">
+    <svg viewBox="0 0 120 100" aria-hidden="true">
+      <g data-dish="biryani" class="is-on">
+        <path d="M22 52 Q60 16 98 52 Z" style="fill: var(--card)" />
+        <path d="M38 40h.01M52 32h.01M66 30h.01M80 38h.01M58 44h.01M46 46h.01M72 46h.01" stroke-width="4" />
+        <ellipse cx="74" cy="30" rx="7" ry="4" transform="rotate(-30 74 30)" style="fill: var(--green)" />
+        <path d="M12 52 Q60 104 108 52 Z" style="fill: var(--red)" />
+        <path d="M8 52 H112" stroke-width="5" />
+      </g>
+      <g data-dish="kebab">
+        <path d="M6 50 H114" stroke-width="4" />
+        <rect x="18" y="38" width="18" height="24" rx="8" fill="#9a5a34" />
+        <rect x="40" y="38" width="18" height="24" rx="8" fill="#9a5a34" />
+        <rect x="62" y="38" width="18" height="24" rx="8" fill="#9a5a34" />
+        <rect x="84" y="38" width="18" height="24" rx="8" fill="#9a5a34" />
+        <circle cx="36" cy="80" r="8" fill="none" style="stroke: var(--pink)" stroke-width="3" />
+        <circle cx="54" cy="84" r="6" fill="none" style="stroke: var(--pink)" stroke-width="3" />
+        <path d="M70 82 q8 -10 18 0" style="stroke: var(--green)" fill="none" stroke-width="4" />
+      </g>
+      <g data-dish="momos">
+        <ellipse cx="60" cy="80" rx="54" ry="12" style="fill: var(--card)" />
+        <path d="M14 74 Q14 44 32 44 Q50 44 50 74 Z" style="fill: var(--card)" />
+        <path d="M42 76 Q42 34 60 34 Q78 34 78 76 Z" style="fill: var(--card)" />
+        <path d="M70 74 Q70 44 88 44 Q106 44 106 74 Z" style="fill: var(--card)" />
+        <path d="M26 50 l6 6 6-6 M54 40 l6 6 6-6 M82 50 l6 6 6-6" fill="none" stroke-width="2.5" />
+        <circle cx="104" cy="26" r="9" style="fill: var(--red)" />
+      </g>
+      <g data-dish="chole">
+        <ellipse cx="60" cy="84" rx="56" ry="11" style="fill: var(--card)" />
+        <path d="M8 80 C6 38 34 18 62 22 C88 26 94 56 86 80 Z" fill="#e8b25c" />
+        <path d="M24 50 q5 -5 10 0 M44 36 q5 -5 10 0 M36 64 q5 -5 10 0 M62 46 q4 -4 8 0" fill="none" stroke-width="2.5" />
+        <path d="M62 66 Q86 100 112 66 Z" style="fill: var(--card)" />
+        <ellipse cx="87" cy="66" rx="25" ry="7" fill="#9a5a34" />
+        <circle cx="78" cy="64" r="3" fill="#e2b26a" stroke-width="2" />
+        <circle cx="88" cy="62" r="3" fill="#e2b26a" stroke-width="2" />
+        <circle cx="97" cy="65" r="3" fill="#e2b26a" stroke-width="2" />
+        <circle cx="86" cy="69" r="3" fill="#e2b26a" stroke-width="2" />
+        <path d="M14 90 q16 4 30 -4" fill="none" style="stroke: var(--green)" stroke-width="5" />
+      </g>
+      <g data-dish="pizza">
+        <path d="M18 22 L104 30 L58 94 Z" style="fill: var(--yellow)" />
+        <path d="M14 18 Q60 10 108 26" fill="none" stroke-width="9" style="stroke: #c98b4a" />
+        <circle cx="50" cy="40" r="7" style="fill: var(--red)" />
+        <circle cx="74" cy="46" r="6" style="fill: var(--red)" />
+        <circle cx="58" cy="66" r="6" style="fill: var(--red)" />
+      </g>
+      <g data-dish="chai">
+        <path d="M36 30 q-6 -9 0 -18 q6 -9 0 -18 M58 30 q-6 -9 0 -18 q6 -9 0 -18" fill="none" stroke-width="3.5" />
+        <path d="M26 38 H84 L74 94 H36 Z" fill="#c4693d" />
+        <path d="M28 46 H82" stroke-width="2" opacity="0.5" />
+      </g>
+    </svg>
+    <div>
+      <h3 data-dish-name>{dishes[0].name}</h3>
+      <p data-dish-note>{dishes[0].note}</p>
+      <button
+        class="btn btn--small"
+        type="button"
+        data-dish-spin
+        data-dishes={JSON.stringify(dishes)}
+        style="--hue: var(--red)"
+      >
+        What should we eat?
+      </button>
+    </div>
+  </div>
+</div>

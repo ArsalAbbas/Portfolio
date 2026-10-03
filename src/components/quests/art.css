@@ -1,0 +1,328 @@
+/* The drawings on the quest cards. They're in ink on paper like everything else, and only
+   move while the card is on screen (.is-playing). Without motion they're a still picture. */
+
+.art {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 2.4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.art .fill-card {
+  fill: var(--card);
+}
+.art .fill-ink {
+  fill: var(--ink);
+  stroke: none;
+}
+.art .fill-hue {
+  fill: var(--hue);
+}
+.art .fill-tint {
+  fill: color-mix(in srgb, var(--hue) 30%, var(--card));
+}
+.art .fill-faint {
+  fill: color-mix(in srgb, var(--ink) 12%, var(--card));
+}
+.art .fill-none {
+  fill: none;
+}
+.art__label {
+  fill: var(--ink-2);
+  stroke: none;
+  font: 600 9.5px var(--mono);
+  letter-spacing: 0.06em;
+  text-anchor: middle;
+}
+.art *,
+.art {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+.quest:not(.is-playing) .art * {
+  animation-play-state: paused;
+}
+
+/* voice: two people taking turns, with the pause in between */
+.voice__track {
+  stroke-width: 1.5;
+  stroke-dasharray: 2 4;
+  opacity: 0.45;
+}
+.voice__bar {
+  fill: var(--ink);
+  stroke: none;
+  animation: voice-bar 0.7s ease-in-out var(--d) infinite alternate;
+}
+.voice__row--agent .voice__bar {
+  fill: var(--hue);
+  stroke: var(--ink);
+  stroke-width: 1.2;
+}
+.voice__row--you {
+  animation: voice-you 6s linear infinite;
+}
+.voice__row--agent {
+  animation: voice-agent 6s linear infinite;
+}
+.voice__gap {
+  stroke-width: 1.6;
+  animation: voice-gap 6s linear infinite;
+}
+.voice__playhead {
+  stroke: var(--red);
+  stroke-width: 2;
+  animation: voice-playhead 6s linear infinite;
+}
+@keyframes voice-bar {
+  from {
+    scale: 1 0.45;
+  }
+}
+@keyframes voice-you {
+  0%,
+  48% {
+    scale: 1 1;
+  }
+  53%,
+  97% {
+    scale: 1 0.16;
+  }
+}
+@keyframes voice-agent {
+  0%,
+  55% {
+    scale: 1 0.16;
+  }
+  60%,
+  95% {
+    scale: 1 1;
+  }
+  100% {
+    scale: 1 0.16;
+  }
+}
+@keyframes voice-gap {
+  0%,
+  49% {
+    opacity: 0;
+  }
+  53%,
+  62% {
+    opacity: 1;
+  }
+  70%,
+  100% {
+    opacity: 0;
+  }
+}
+@keyframes voice-playhead {
+  from {
+    translate: 0 0;
+  }
+  to {
+    translate: 225px 0;
+  }
+}
+
+/* backend: requests in, a service sorting them out, the database */
+.backend__wire {
+  stroke-width: 1.5;
+  stroke-dasharray: 3 4;
+  opacity: 0.5;
+}
+.backend__slot {
+  stroke-width: 2;
+  opacity: 0.35;
+}
+.backend__led {
+  fill: var(--green);
+  stroke-width: 1.5;
+  animation: backend-led 1.5s steps(1) var(--d) infinite;
+}
+.backend__packet {
+  stroke-width: 1.5;
+  animation: backend-packet 2.4s var(--ease) var(--d) infinite;
+}
+@keyframes backend-led {
+  50% {
+    fill: var(--card);
+  }
+}
+@keyframes backend-packet {
+  0% {
+    translate: 0 0;
+    opacity: 0;
+  }
+  12%,
+  85% {
+    opacity: 1;
+  }
+  100% {
+    translate: var(--dx) var(--dy);
+    opacity: 0;
+  }
+}
+
+/* frontend: the page builds itself, then the cursor presses the button */
+.frontend__line {
+  stroke-width: 2;
+  opacity: 0.4;
+}
+.frontend__block {
+  animation: frontend-pop 6s var(--ease) var(--d) infinite both;
+}
+.frontend__button {
+  animation: frontend-press 6s var(--ease) infinite;
+}
+.frontend__cursor {
+  stroke-width: 2;
+  opacity: 0;
+  animation: frontend-cursor 6s var(--ease) infinite;
+}
+.frontend__ripple {
+  stroke: var(--hue);
+  stroke-width: 2;
+  opacity: 0;
+  animation: frontend-ripple 6s var(--ease) infinite;
+}
+@keyframes frontend-pop {
+  0% {
+    opacity: 0;
+    scale: 0.7;
+  }
+  6%,
+  84% {
+    opacity: 1;
+    scale: 1;
+  }
+  92%,
+  100% {
+    opacity: 0;
+    scale: 0.94;
+  }
+}
+@keyframes frontend-cursor {
+  0%,
+  34% {
+    opacity: 0;
+    translate: 0 0;
+  }
+  40% {
+    opacity: 1;
+  }
+  58% {
+    translate: -118px -6px;
+    scale: 1;
+  }
+  62% {
+    translate: -118px -6px;
+    scale: 0.82;
+  }
+  66%,
+  84% {
+    opacity: 1;
+    translate: -118px -6px;
+    scale: 1;
+  }
+  92%,
+  100% {
+    opacity: 0;
+    translate: -118px -6px;
+  }
+}
+@keyframes frontend-press {
+  0%,
+  60%,
+  68%,
+  100% {
+    scale: 1;
+  }
+  63% {
+    scale: 0.9;
+  }
+}
+@keyframes frontend-ripple {
+  0%,
+  61% {
+    opacity: 0;
+    scale: 0.3;
+  }
+  63% {
+    opacity: 1;
+  }
+  75%,
+  100% {
+    opacity: 0;
+    scale: 1.6;
+  }
+}
+
+/* design: sticky notes, and a curve being drawn with the pen tool */
+.design__note {
+  rotate: var(--r);
+  animation: design-wiggle 3.2s ease-in-out var(--d, 0s) infinite alternate;
+}
+.design__scribble {
+  stroke-width: 2;
+  opacity: 0.5;
+}
+.design__curve {
+  stroke-width: 3.5;
+  stroke-dasharray: 100;
+  animation: design-draw 6s var(--ease) infinite;
+}
+.design__handle {
+  stroke-width: 1.5;
+  stroke-dasharray: 3 3;
+  animation: design-show 6s var(--ease) infinite;
+}
+.design__points {
+  stroke-width: 2;
+  animation: design-show 6s var(--ease) infinite;
+}
+@keyframes design-wiggle {
+  to {
+    rotate: calc(var(--r) * -0.4);
+  }
+}
+@keyframes design-draw {
+  0% {
+    stroke-dashoffset: 100;
+  }
+  40%,
+  86% {
+    stroke-dashoffset: 0;
+  }
+  100% {
+    stroke-dashoffset: -100;
+  }
+}
+@keyframes design-show {
+  0%,
+  8% {
+    opacity: 0;
+  }
+  16%,
+  86% {
+    opacity: 1;
+  }
+  96%,
+  100% {
+    opacity: 0;
+  }
+}
+
+/* no motion: a still picture, with everything in place */
+@media (prefers-reduced-motion: reduce) {
+  .art * {
+    animation: none !important;
+  }
+  .frontend__cursor {
+    opacity: 1;
+    translate: -118px -6px;
+  }
+}

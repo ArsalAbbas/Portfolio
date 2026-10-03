@@ -1,0 +1,28 @@
+---
+// Stories: a kalimba you can play. Tap a tine, drag across them, or let it play a tune. The
+// sound is made on the spot by ./kalimba.ts; there are no audio files.
+import { kalimba } from '../../../data/character'
+
+// the lowest note sits in the middle and the rest alternate outwards, like on a real kalimba
+const order = [7, 5, 3, 1, 0, 2, 4, 6, 8]
+const octave = (hz: number) => Math.floor(Math.log2(hz / 16.3516))
+---
+
+<div class="widget" data-widget="kalimba">
+  <div class="kalimba" data-tines>
+    {
+      order.map((i) => {
+        const note = kalimba.notes[i]
+        return (
+          <button class="tine" type="button" data-note={i} data-hz={note.hz} style={`--len: ${112 - i * 8}px`} aria-label={`${note.name}${octave(note.hz)}`}>
+            <span aria-hidden="true">{note.name}</span>
+          </button>
+        )
+      })
+    }
+  </div>
+  <div class="kalimba__foot">
+    <button class="btn btn--small" type="button" data-tune={JSON.stringify(kalimba.tune)} style="--hue: var(--pink)">Play a tune</button>
+    <span class="fineprint">Tap a tine, or drag across them.</span>
+  </div>
+</div>

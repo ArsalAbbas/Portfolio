@@ -1,0 +1,33 @@
+---
+// One area of work: a drawing of it, what the problem is, the kinds of things I build there,
+// and a line of flavour text at the bottom.
+import type { Quest, QuestArt } from '../../data/quests'
+import Shape from '../shared/Shape.astro'
+import BackendArt from './art/BackendArt.astro'
+import DesignArt from './art/DesignArt.astro'
+import FrontendArt from './art/FrontendArt.astro'
+import VoiceArt from './art/VoiceArt.astro'
+
+interface Props {
+  quest: Quest
+}
+
+const { quest } = Astro.props
+const drawings: Record<QuestArt, typeof VoiceArt> = { voice: VoiceArt, backend: BackendArt, frontend: FrontendArt, design: DesignArt }
+const Art = drawings[quest.art]
+---
+
+<article class="card quest" style={`--hue: var(--${quest.hue})`}>
+  <div class="quest__art"><Art /></div>
+  <div class="quest__body">
+    <div class="quest__title">
+      <Shape name={quest.shape} size={22} />
+      <h3>{quest.title}</h3>
+    </div>
+    <p class="quest__line">{quest.line}</p>
+    <ul class="quest__things">
+      {quest.things.map((thing) => <li>{thing}</li>)}
+    </ul>
+    <p class="quest__flavour">{quest.flavour}</p>
+  </div>
+</article>

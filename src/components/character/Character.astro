@@ -1,0 +1,41 @@
+---
+// 04 Character, on its own page: the person behind the work. Pick one and the avatar suits up;
+// each has one small thing to look at or play with. The words are in
+// src/data/character.ts.
+import { classes } from '../../data/character'
+import SectionHead from '../shared/SectionHead.astro'
+import CharacterCard from './CharacterCard.astro'
+import ClassPanel from './ClassPanel.astro'
+import ClassPicker from './ClassPicker.astro'
+import Room from './Room.astro'
+---
+
+<section class="section section--first" id="character" data-section="character">
+  <div class="wrap">
+    <SectionHead
+      as="h1"
+      n="04"
+      shape="square"
+      hue="pink"
+      kicker="Character"
+      title="Choose your Arsal"
+      sub="Same person, different builds. Pick one and the avatar suits up. Poking is encouraged."
+    />
+
+    <div class="character" data-character>
+      <CharacterCard first={classes[0]} />
+      <div>
+        <ClassPicker classes={classes} />
+        {classes.map((c, i) => <ClassPanel cls={c} open={i === 0} />)}
+      </div>
+    </div>
+
+    <Room />
+  </div>
+</section>
+
+<script>
+  import { initCharacter } from './character'
+
+  initCharacter()
+</script>

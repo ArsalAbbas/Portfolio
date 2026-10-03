@@ -1,0 +1,53 @@
+/* The continue screen at the end of each page. */
+
+.continue {
+  text-align: center;
+  padding-block: clamp(90px, 13vw, 170px);
+}
+.continue__title {
+  font: 800 clamp(48px, 9vw, 120px)/0.95 var(--display);
+  letter-spacing: -0.05em;
+}
+.continue__count {
+  display: inline-grid;
+  place-items: center;
+  width: 1.2em;
+  margin-left: 0.15em;
+  color: var(--red);
+  font-variant-numeric: tabular-nums;
+}
+.continue__count.is-tick {
+  animation: tick 0.3s var(--spring);
+}
+@keyframes tick {
+  from {
+    scale: 1.4;
+  }
+}
+.continue p {
+  max-width: 36rem;
+  margin: 22px auto 0;
+  color: var(--ink-2);
+  font-size: clamp(17px, 1.8vw, 20px);
+}
+.continue__choices {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-top: 36px;
+}
+.continue__links {
+  flex-wrap: wrap;
+  justify-content: center;
+  row-gap: 14px;
+  margin-top: 26px;
+}
+.continue__over {
+  margin-top: 18px;
+  font: 600 13px/1.4 var(--mono);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  min-height: 1.4em;
+}

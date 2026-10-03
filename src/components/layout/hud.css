@@ -1,0 +1,199 @@
+/* The bar along the top, and the controller along the bottom on phones. */
+
+.hud {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  height: var(--hud);
+  background: color-mix(in srgb, var(--paper) 86%, transparent);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-bottom: 1.5px solid var(--line);
+}
+.hud__bar {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+.hud__brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  font: 700 15px/1 var(--display);
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+}
+.hud__glasses {
+  width: 40px;
+  height: 18px;
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 3;
+  stroke-linejoin: round;
+  transition: transform 0.4s var(--spring);
+}
+.hud__brand:hover .hud__glasses {
+  transform: rotate(-8deg) scale(1.1);
+}
+.hud__nav {
+  display: flex;
+  gap: 4px;
+  margin-left: auto;
+}
+.hud__link {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 12px;
+  border-radius: 11px;
+  font: 500 13px/1 var(--mono);
+  letter-spacing: 0.04em;
+  text-decoration: none;
+  color: var(--ink-2);
+  transition:
+    background 0.2s,
+    color 0.2s;
+}
+.hud__link .shape {
+  transition: transform 0.35s var(--spring);
+}
+.hud__link:hover,
+.hud__link[aria-current='true'] {
+  color: var(--ink);
+  background: color-mix(in srgb, var(--hue) 22%, transparent);
+}
+.hud__link:hover .shape {
+  transform: rotate(90deg) scale(1.2);
+}
+.hud__link kbd {
+  font-size: 10px;
+  padding: 2px 4px 3px;
+  opacity: 0.5;
+}
+.hud__tools {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.hud__btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  height: 38px;
+  padding: 0 11px;
+  border: 1.5px solid var(--ink);
+  border-radius: 11px;
+  background: var(--card);
+  font: 600 12px/1 var(--mono);
+  transition:
+    transform 0.2s var(--spring),
+    box-shadow 0.2s;
+  box-shadow: 2px 2px 0 var(--shadow);
+}
+.hud__btn:hover {
+  transform: translate(-1px, -1px);
+  box-shadow: 3px 3px 0 var(--shadow);
+}
+.hud__btn:active {
+  transform: translate(2px, 2px);
+  box-shadow: none;
+}
+.hud__btn svg {
+  width: 17px;
+  height: 17px;
+}
+.hud__xp {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -1.5px;
+  height: 3px;
+}
+.hud__xp span {
+  display: block;
+  height: 100%;
+  width: 100%;
+  transform-origin: left;
+  transform: scaleX(var(--xp, 0));
+  background: linear-gradient(90deg, var(--red), var(--yellow), var(--green), var(--blue), var(--pink));
+}
+.theme-icon--sun {
+  display: none;
+}
+[data-theme='dark'] .theme-icon--sun {
+  display: block;
+}
+[data-theme='dark'] .theme-icon--moon {
+  display: none;
+}
+
+/* the controller: section buttons along the bottom on small screens */
+.pad {
+  display: none;
+}
+
+@media (max-width: 860px) {
+  :root {
+    --hud: 60px;
+  }
+  .hud__nav {
+    display: none;
+  }
+  .hud__tools {
+    margin-left: auto;
+  }
+  .pad {
+    position: fixed;
+    z-index: 40;
+    left: 50%;
+    bottom: max(14px, env(safe-area-inset-bottom));
+    translate: -50% 0;
+    display: flex;
+    gap: 6px;
+    padding: 6px;
+    border: var(--stroke) solid var(--ink);
+    border-radius: 999px;
+    background: var(--card);
+    box-shadow: 4px 4px 0 var(--shadow);
+    transition:
+      translate 0.5s var(--spring),
+      opacity 0.2s,
+      visibility 0.5s;
+  }
+  /* on the home page it waits below the screen until you've pressed start or scrolled past the
+     button, so it never covers it. hud.ts says when; without scripts it just stays put */
+  @media (scripting: enabled) {
+    :root:has([data-hero]):not(.is-started) .pad {
+      translate: -50% 200%;
+      opacity: 0;
+      visibility: hidden;
+      transition:
+        translate 0.3s ease-in,
+        opacity 0.3s,
+        visibility 0.3s;
+    }
+  }
+  .pad a {
+    display: grid;
+    place-items: center;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    border: 1.5px solid transparent;
+    transition:
+      transform 0.25s var(--spring),
+      background 0.2s;
+  }
+  .pad a[aria-current='true'] {
+    background: color-mix(in srgb, var(--hue) 28%, transparent);
+    border-color: var(--ink);
+  }
+  .pad a:active {
+    transform: scale(0.88);
+  }
+  body {
+    padding-bottom: 84px;
+  }
+}

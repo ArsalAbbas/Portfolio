@@ -1,0 +1,174 @@
+/* Confetti, the easter eggs, the light switch, and calmer motion for those who ask for it.
+   The effects are made in src/scripts/effects.ts and drawn on one layer above the page. */
+
+.fx-layer {
+  position: fixed;
+  inset: 0;
+  z-index: 70;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+/* confetti made of the shapes */
+.bit {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  border: 2px solid var(--ink);
+  background: var(--c);
+  animation: burst 0.9s cubic-bezier(0.2, 0.7, 0.3, 1) forwards;
+}
+.bit--circle {
+  border-radius: 50%;
+}
+.bit--triangle {
+  border: 0;
+  clip-path: polygon(50% 0, 100% 100%, 0 100%);
+}
+@keyframes burst {
+  to {
+    translate: var(--dx) var(--dy);
+    rotate: var(--rot);
+    opacity: 0;
+  }
+}
+
+/* winter is coming */
+.flake {
+  position: absolute;
+  width: var(--size);
+  height: var(--size);
+  border: 1.5px solid var(--ink);
+  border-radius: 50%;
+  background: #fff;
+  animation: fall var(--fall) linear forwards;
+}
+@keyframes fall {
+  to {
+    translate: var(--drift) calc(100vh + 32px);
+  }
+}
+
+/* I'm ready! bubbles, all the way up */
+.fizz {
+  position: absolute;
+  width: var(--size);
+  height: var(--size);
+  border: 2px solid var(--blue);
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 32% 30%, #fff 0 12%, transparent 13%),
+    color-mix(in srgb, var(--blue) 12%, transparent);
+  animation: rise var(--rise) linear forwards;
+}
+@keyframes rise {
+  33% {
+    translate: calc(var(--sway) * 0.6) calc(-33vh - 26px);
+  }
+  66% {
+    translate: calc(var(--sway) * -0.3) calc(-66vh - 53px);
+  }
+  to {
+    translate: var(--sway) calc(-100vh - 80px);
+  }
+}
+
+/* I'm Batman: a signal in the sky, with a pair of glasses where the bat would be */
+.signal {
+  position: absolute;
+  inset: 0;
+  background: rgb(5 5 12 / 0.35);
+  animation: signal-in 0.8s var(--ease);
+}
+.signal.is-leaving {
+  animation: signal-out 0.6s var(--ease) forwards;
+}
+@keyframes signal-in {
+  from {
+    opacity: 0;
+  }
+}
+@keyframes signal-out {
+  to {
+    opacity: 0;
+  }
+}
+.signal__beam {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgb(255 230 150 / 0.42), rgb(255 230 150 / 0.08));
+  clip-path: polygon(38% 100%, 44% 100%, 80% 24%, 54% 14%);
+}
+.signal__disc {
+  position: absolute;
+  left: 66%;
+  top: 20%;
+  display: grid;
+  place-items: center;
+  width: min(34vw, 300px);
+  aspect-ratio: 1.6;
+  translate: -50% -50%;
+  border-radius: 50%;
+  background: radial-gradient(#fff6c8, #ffe27a 60%, rgb(255 226 122 / 0.7));
+  box-shadow: 0 0 60px rgb(255 226 122 / 0.55);
+}
+.signal__disc svg {
+  width: 62%;
+  fill: #121116;
+  stroke: #121116;
+  stroke-width: 2.5;
+  stroke-linecap: round;
+}
+.signal__disc path {
+  fill: none;
+}
+
+/* I don't feel so good: dust, then better */
+.is-dusted {
+  animation: dust 1.4s var(--ease) forwards;
+}
+.is-undusting {
+  animation: undust 0.9s var(--ease);
+}
+@keyframes dust {
+  to {
+    opacity: 0;
+    filter: blur(6px);
+    translate: 30px -20px;
+  }
+}
+@keyframes undust {
+  from {
+    opacity: 0;
+    filter: blur(6px);
+  }
+}
+
+/* the light switch: the new theme spreads out in a circle from where you are */
+.is-switching::view-transition-old(root),
+.is-switching::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+.is-switching::view-transition-new(root) {
+  animation: reveal 0.7s var(--ease);
+}
+@keyframes reveal {
+  from {
+    clip-path: circle(0 at var(--cx, 50%) var(--cy, 50%));
+  }
+  to {
+    clip-path: circle(150vmax at var(--cx, 50%) var(--cy, 50%));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

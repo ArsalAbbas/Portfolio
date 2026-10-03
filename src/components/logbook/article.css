@@ -1,0 +1,208 @@
+/* A blog post: the article, its prose, code colours and the reading bar. */
+
+.article {
+  padding-block: clamp(40px, 7vw, 90px) 40px;
+}
+.article__head {
+  max-width: 46rem;
+  margin: 0 auto 44px;
+}
+.article__head h1 {
+  font: 800 clamp(34px, 5.4vw, 60px)/1.04 var(--display);
+  letter-spacing: -0.045em;
+  text-wrap: balance;
+}
+.article__head p {
+  margin-top: 16px;
+  color: var(--ink-2);
+  font-size: 19px;
+}
+.article__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+  margin-top: 22px;
+  font: 500 12.5px/1.4 var(--mono);
+  color: var(--ink-3);
+}
+.back {
+  display: inline-flex;
+  gap: 8px;
+  margin-bottom: 28px;
+  font: 600 12.5px/1 var(--mono);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: var(--ink-2);
+}
+.back:hover {
+  color: var(--ink);
+}
+
+.prose {
+  max-width: 46rem;
+  margin-inline: auto;
+  font-size: 18.5px;
+  line-height: 1.72;
+}
+.prose > * + * {
+  margin-top: 1.15em;
+}
+.prose h2 {
+  margin-top: 2.1em;
+  font: 750 1.45em/1.2 var(--display);
+  letter-spacing: -0.03em;
+}
+.prose h3 {
+  margin-top: 1.8em;
+  font: 700 1.15em/1.3 var(--display);
+  letter-spacing: -0.02em;
+}
+.prose a {
+  text-decoration-color: var(--blue);
+  text-decoration-thickness: 2px;
+}
+.prose a:hover {
+  background: color-mix(in srgb, var(--blue) 16%, transparent);
+}
+.prose ul,
+.prose ol {
+  padding-left: 1.3em;
+}
+.prose ul {
+  list-style: none;
+}
+.prose ul > li {
+  position: relative;
+}
+.prose ul > li::before {
+  content: '';
+  position: absolute;
+  left: -1.05em;
+  top: 0.62em;
+  width: 0.42em;
+  height: 0.42em;
+  border: 2px solid var(--ink);
+  background: var(--pink);
+  rotate: 45deg;
+}
+.prose li + li {
+  margin-top: 0.4em;
+}
+.prose blockquote {
+  margin-inline: 0;
+  padding: 4px 0 4px 20px;
+  border-left: 4px solid var(--yellow);
+  font-style: italic;
+  color: var(--ink-2);
+}
+.prose code {
+  font: 500 0.86em var(--mono);
+  padding: 2px 6px;
+  border-radius: 6px;
+  background: color-mix(in srgb, var(--ink) 8%, transparent);
+}
+.prose pre {
+  margin-inline: -8px;
+  padding: 18px 20px;
+  border: var(--stroke) solid var(--ink);
+  border-radius: 14px;
+  box-shadow: 5px 5px 0 var(--blue);
+  overflow-x: auto;
+  font-size: 0.82em;
+  line-height: 1.65;
+}
+.prose pre code {
+  padding: 0;
+  background: none;
+  font-size: 1em;
+}
+.prose img {
+  border: var(--stroke) solid var(--ink);
+  border-radius: 14px;
+}
+.prose hr {
+  margin-block: 2.6em;
+  border: 0;
+  text-align: center;
+}
+.prose hr::after {
+  content: '○ △ □ ✕';
+  font: 600 14px var(--mono);
+  letter-spacing: 0.6em;
+  color: var(--ink-3);
+}
+.prose table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9em;
+}
+.prose th,
+.prose td {
+  padding: 8px 10px;
+  border-bottom: 1.5px solid var(--line);
+  text-align: left;
+}
+.prose th {
+  font: 600 0.8em var(--mono);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+/* code colours, light and dark */
+:root {
+  --astro-code-foreground: var(--ink);
+  --astro-code-background: var(--card);
+  --astro-code-token-keyword: #d6336c;
+  --astro-code-token-string: #0d8f63;
+  --astro-code-token-string-expression: #0d8f63;
+  --astro-code-token-function: #3550e6;
+  --astro-code-token-constant: #c25e00;
+  --astro-code-token-parameter: #8a4cd6;
+  --astro-code-token-comment: #8a8374;
+  --astro-code-token-punctuation: #4c473e;
+  --astro-code-token-link: #3550e6;
+}
+[data-theme='dark'] {
+  --astro-code-token-keyword: #ff7fb0;
+  --astro-code-token-string: #5fe0aa;
+  --astro-code-token-string-expression: #5fe0aa;
+  --astro-code-token-function: #8fa6ff;
+  --astro-code-token-constant: #ffb46b;
+  --astro-code-token-parameter: #c9a2ff;
+  --astro-code-token-comment: #8f897d;
+  --astro-code-token-punctuation: #c3bdb0;
+  --astro-code-token-link: #8fa6ff;
+}
+
+.article__end {
+  max-width: 46rem;
+  margin: 64px auto 0;
+  padding-top: 28px;
+  border-top: 1.5px dashed var(--line);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  justify-content: space-between;
+}
+
+/* reading progress as an XP bar, in place of the page one */
+body:has(.read-xp) .hud__xp {
+  display: none;
+}
+.read-xp {
+  position: fixed;
+  z-index: 41;
+  left: 0;
+  right: 0;
+  top: var(--hud);
+  height: 4px;
+  pointer-events: none;
+}
+.read-xp span {
+  display: block;
+  height: 100%;
+  transform-origin: left;
+  transform: scaleX(var(--read, 0));
+  background: var(--blue);
+}

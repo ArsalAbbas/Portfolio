@@ -1,0 +1,28 @@
+---
+// 01 Quests: the areas I work in, one card each. The words live in src/data/quests.ts.
+import { quests } from '../../data/quests'
+import SectionHead from '../shared/SectionHead.astro'
+import QuestCard from './QuestCard.astro'
+---
+
+<section class="section" id="quests" data-section="quests">
+  <div class="wrap">
+    <SectionHead
+      n="01"
+      shape="circle"
+      hue="red"
+      kicker="Quests"
+      title="What I work on"
+      sub="Mostly at SquadStack.ai, where I build voice AI end to end. Broad strokes here; ask me about the rest."
+    />
+    <div class="quests">
+      {quests.map((quest) => <QuestCard quest={quest} />)}
+    </div>
+  </div>
+</section>
+
+<script>
+  import { initQuests } from './quests'
+
+  initQuests()
+</script>

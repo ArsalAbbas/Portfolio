@@ -1,0 +1,40 @@
+---
+// 03 Blog, on the home page: the latest three posts. The posts are Markdown files in
+// src/content/blog.
+import { getPosts } from '../../lib/posts'
+import SectionHead from '../shared/SectionHead.astro'
+import NoPosts from './NoPosts.astro'
+import PostRow from './PostRow.astro'
+
+const posts = (await getPosts()).slice(0, 3)
+---
+
+<section class="section" id="blog" data-section="blog">
+  <div class="wrap">
+    <SectionHead
+      n="03"
+      shape="cross"
+      hue="blue"
+      kicker="Blog"
+      title="Notes from the build"
+      sub="Engineering write-ups: what I’m building, what broke, and what I learned fixing it."
+    />
+
+    {
+      posts.length ? (
+        <ul class="posts">
+          {posts.map((post) => (
+            <PostRow post={post} />
+          ))}
+        </ul>
+      ) : (
+        <NoPosts />
+      )
+    }
+
+    <p class="logbook__more">
+      <a class="btn btn--small logbook__open" href="/blog/">All posts</a>
+      <a class="btn btn--small btn--ghost" href="/rss.xml">RSS</a>
+    </p>
+  </div>
+</section>

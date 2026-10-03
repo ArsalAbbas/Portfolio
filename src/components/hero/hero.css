@@ -1,0 +1,302 @@
+/* The title screen. */
+
+.hero {
+  position: relative;
+  min-height: calc(100svh - var(--hud));
+  display: grid;
+  align-items: center;
+  padding-block: clamp(36px, 6vw, 72px) clamp(56px, 8vw, 96px);
+  overflow: clip;
+  isolation: isolate;
+}
+.hero__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.08fr) minmax(0, 0.92fr);
+  align-items: center;
+  gap: clamp(24px, 4vw, 56px);
+}
+.hero__status {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.hero__status .dot {
+  position: relative;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--green);
+}
+/* the ping: a copy of the dot that grows and fades, which never needs repainting */
+.hero__status .dot::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: inherit;
+  animation: ping 2.2s var(--ease) infinite;
+}
+.hero__status[data-away] .dot {
+  background: var(--yellow);
+}
+.hero__status[data-away] .dot::after {
+  display: none;
+}
+@keyframes ping {
+  from {
+    opacity: 0.6;
+  }
+  70%,
+  to {
+    opacity: 0;
+    scale: 3;
+  }
+}
+.hero__name {
+  margin: 22px 0 22px;
+  font: 800 clamp(58px, 10.4vw, 156px)/0.9 var(--display);
+  letter-spacing: -0.055em;
+  user-select: none;
+}
+.hero__name .word {
+  display: block;
+  white-space: nowrap;
+}
+.hero__name .ch {
+  display: inline-block;
+  transition:
+    transform 0.45s var(--spring),
+    color 0.2s;
+  cursor: default;
+}
+.hero__name .ch:hover,
+.hero__name .ch.is-hit {
+  transform: translateY(-0.12em) rotate(var(--tilt, -6deg));
+  color: var(--pop, var(--red));
+}
+.hero__role {
+  max-width: 34rem;
+  font-size: clamp(17px, 1.75vw, 21px);
+  line-height: 1.5;
+  color: var(--ink-2);
+  text-wrap: pretty;
+}
+.hero__role strong {
+  color: var(--ink);
+  font-weight: 600;
+}
+.hero__level {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+  margin-top: 26px;
+  font-size: 12.5px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+}
+.hero__level > span {
+  white-space: nowrap;
+}
+.hero__level b {
+  color: var(--ink);
+  font-size: 15px;
+}
+.xpbar {
+  position: relative;
+  width: 140px;
+  height: 12px;
+  border: 1.5px solid var(--ink);
+  border-radius: 999px;
+  overflow: hidden;
+  background: var(--card);
+}
+.xpbar i {
+  position: absolute;
+  inset: 0;
+  transform-origin: left;
+  transform: scaleX(var(--p, 0.5));
+  background: repeating-linear-gradient(-45deg, var(--green) 0 6px, color-mix(in srgb, var(--green) 70%, white) 6px 12px);
+  transition: transform 1.2s var(--ease);
+}
+.hero__cta {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 14px 22px;
+  margin-top: 34px;
+}
+.hero__links {
+  display: flex;
+  gap: 16px;
+  font: 500 13px/1 var(--mono);
+}
+.hero__links a {
+  color: var(--ink-2);
+}
+.hero__links a:hover {
+  color: var(--ink);
+}
+
+.hero__stage {
+  position: relative;
+  width: min(100%, 560px);
+  aspect-ratio: 1;
+  justify-self: center;
+}
+.hero__orb {
+  position: absolute;
+  inset: 4%;
+  overflow: hidden;
+  border-radius: 50%;
+  border: var(--stroke) solid var(--ink);
+  background-color: var(--yellow);
+  box-shadow: 8px 8px 0 var(--shadow);
+}
+/* two sets of rings: one sits still, and the other (oversized, so it always covers the orb)
+   drifts after the pointer, so the two interfere. toys.ts moves it as a whole layer rather
+   than redrawing it, which keeps the title screen smooth */
+.hero__orb,
+.hero__ripple {
+  background-image: repeating-radial-gradient(
+    circle at 50% 50%,
+    color-mix(in srgb, var(--ink) 30%, transparent) 0 1.6px,
+    transparent 1.6px 11px
+  );
+}
+.hero__ripple {
+  position: absolute;
+  inset: -32%;
+  will-change: translate;
+}
+.hero__avatar {
+  position: absolute;
+  left: 50%;
+  bottom: 4%;
+  width: 78%;
+  translate: -50% 0;
+  clip-path: circle(66% at 50% 34%);
+}
+.hero__hint {
+  position: absolute;
+  left: 50%;
+  bottom: 22px;
+  translate: -50% 0;
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  white-space: nowrap;
+}
+
+/* the throwable shapes */
+.toy {
+  position: absolute;
+  z-index: 3;
+  left: 0;
+  top: 0;
+  width: var(--s, 84px);
+  height: var(--s, 84px);
+  display: grid;
+  place-items: center;
+  touch-action: none;
+  -webkit-tap-highlight-color: transparent;
+  text-decoration: none;
+  cursor: grab;
+  will-change: transform;
+}
+.toy:active {
+  cursor: grabbing;
+}
+.toy .shape {
+  width: 100%;
+  height: 100%;
+  stroke-width: 1.6;
+  filter: drop-shadow(4px 4px 0 var(--shadow));
+  transition: scale 0.25s var(--spring);
+}
+.toy:hover .shape {
+  scale: 1.08;
+}
+.toy__label {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  translate: -50% 4px;
+  padding: 5px 9px;
+  border: 1.5px solid var(--ink);
+  border-radius: 8px;
+  background: var(--card);
+  font: 600 11px/1 var(--mono);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition:
+    opacity 0.2s,
+    translate 0.3s var(--spring);
+}
+.toy:hover .toy__label,
+.toy:focus-visible .toy__label {
+  opacity: 1;
+  translate: -50% 10px;
+}
+/* where the shapes rest before the script takes over */
+.toy[data-home='0'] {
+  --x: 2%;
+  --y: 8%;
+}
+.toy[data-home='1'] {
+  --x: 78%;
+  --y: 2%;
+}
+.toy[data-home='2'] {
+  --x: 84%;
+  --y: 64%;
+}
+.toy[data-home='3'] {
+  --x: -2%;
+  --y: 70%;
+}
+.hero__stage .toy {
+  left: var(--x);
+  top: var(--y);
+}
+.hero__stage .toy.is-live {
+  left: 0;
+  top: 0;
+}
+
+.hero .bubble {
+  left: 56%;
+  top: 6%;
+}
+
+@media (max-width: 860px) {
+  .hero {
+    min-height: auto;
+    padding-top: 28px;
+  }
+  .hero__grid {
+    grid-template-columns: 1fr;
+  }
+  .hero__stage {
+    order: -1;
+    width: min(88%, 420px);
+  }
+  .hero__name {
+    margin-top: 14px;
+  }
+  .hero__hint {
+    display: none;
+  }
+  .hero .bubble {
+    left: 50%;
+    top: -2%;
+    max-width: 210px;
+    font-size: 13px;
+  }
+}

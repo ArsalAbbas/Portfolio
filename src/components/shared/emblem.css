@@ -1,0 +1,139 @@
+/* Op-art emblems: a simple shape filled with a pattern that keeps moving while it's on screen
+   (.is-playing, from Emblem.astro). Each pattern travels exactly whole repeats, so the loop
+   never jumps. */
+
+.emblem {
+  --hue: var(--yellow);
+  display: block;
+  position: relative;
+  width: var(--size, 112px);
+  aspect-ratio: 1;
+  flex: none;
+}
+.emblem::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border: var(--stroke) solid var(--ink);
+  background-color: var(--paper);
+}
+.emblem--circle::before {
+  border-radius: 50%;
+  background-image: repeating-radial-gradient(
+    circle,
+    var(--hue) var(--ring),
+    var(--hue) calc(var(--ring) + 5px),
+    transparent calc(var(--ring) + 5px),
+    transparent calc(var(--ring) + 10px)
+  );
+  animation: ring 2.4s linear infinite;
+}
+.emblem--square::before {
+  border-radius: 10px;
+  background-image: repeating-conic-gradient(var(--hue) 0 25%, transparent 0 50%);
+  background-size: 22px 22px;
+  background-position: var(--slide) var(--slide);
+  animation: slide 3s linear infinite;
+}
+.emblem--triangle::before {
+  border: 0;
+  clip-path: polygon(50% 4%, 97% 92%, 3% 92%);
+  background-image: repeating-linear-gradient(
+    0deg,
+    var(--hue) calc(var(--slide)),
+    var(--hue) calc(var(--slide) + 6px),
+    var(--ink) calc(var(--slide) + 6px),
+    var(--ink) calc(var(--slide) + 8.5px),
+    transparent calc(var(--slide) + 8.5px),
+    transparent calc(var(--slide) + 14px)
+  );
+  animation: stripes 2.8s linear infinite reverse;
+}
+.emblem--cross::before {
+  border: 0;
+  clip-path: polygon(
+    20% 0,
+    50% 30%,
+    80% 0,
+    100% 20%,
+    70% 50%,
+    100% 80%,
+    80% 100%,
+    50% 70%,
+    20% 100%,
+    0 80%,
+    30% 50%,
+    0 20%
+  );
+  background-image: radial-gradient(var(--ink) 2.2px, transparent 2.6px), linear-gradient(var(--hue), var(--hue));
+  background-size: 11px 11px, auto;
+  background-position: var(--slide) 0, 0 0;
+  animation: slide 1.8s linear infinite;
+}
+.emblem--star::before {
+  border: 0;
+  clip-path: polygon(50% 0, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+  background-image: repeating-conic-gradient(from var(--turn), var(--hue) 0 10deg, var(--ink) 10deg 13deg, transparent 13deg 20deg);
+  animation: turn 9s linear infinite;
+}
+/* the clipped shapes lose their border, so draw an outline underneath */
+.emblem--triangle::after,
+.emblem--cross::after,
+.emblem--star::after {
+  content: '';
+  position: absolute;
+  inset: -3px;
+  z-index: -1;
+  background: var(--ink);
+  clip-path: inherit;
+}
+.emblem--triangle::after {
+  clip-path: polygon(50% 0, 100% 95%, 0 95%);
+}
+.emblem--cross::after {
+  inset: -4px;
+  clip-path: polygon(
+    20% 0,
+    50% 30%,
+    80% 0,
+    100% 20%,
+    70% 50%,
+    100% 80%,
+    80% 100%,
+    50% 70%,
+    20% 100%,
+    0 80%,
+    30% 50%,
+    0 20%
+  );
+}
+.emblem--star::after {
+  inset: -5px;
+  clip-path: polygon(50% 0, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+}
+
+.emblem:not(.is-playing)::before {
+  animation-play-state: paused;
+}
+
+@keyframes ring {
+  to {
+    --ring: 10px;
+  }
+}
+@keyframes slide {
+  to {
+    --slide: 22px;
+  }
+}
+/* the triangle's stripes repeat every 14px */
+@keyframes stripes {
+  to {
+    --slide: 28px;
+  }
+}
+@keyframes turn {
+  to {
+    --turn: 360deg;
+  }
+}

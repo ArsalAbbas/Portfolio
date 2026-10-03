@@ -1,0 +1,47 @@
+---
+// Every page: the HUD along the top, the page itself, the footer, and on phones a controller
+// along the bottom. Also starts the two things that run everywhere: the field notes for the
+// UX Designer panel, and the listener for typed easter eggs.
+import '@fontsource-variable/unbounded'
+import '@fontsource-variable/geist'
+import '@fontsource-variable/geist-mono'
+import '../styles/global.css'
+import Footer from '../components/layout/Footer.astro'
+import Head from '../components/layout/Head.astro'
+import Hud from '../components/layout/Hud.astro'
+import Pad from '../components/layout/Pad.astro'
+
+interface Props {
+  /** page title; the site name is added after it */
+  title?: string
+  description?: string
+  /** social preview image, relative to the site root */
+  image?: string
+  type?: 'website' | 'article'
+  published?: Date
+}
+---
+
+<!doctype html>
+<html lang="en" data-theme="light">
+  <head>
+    <Head {...Astro.props} />
+  </head>
+  <body>
+    <a class="skip" href="#main">Skip to content</a>
+    <Hud />
+    <main id="main">
+      <slot />
+    </main>
+    <Footer />
+    <Pad />
+    <div class="toasts" role="status" aria-live="polite"></div>
+    <script>
+      import { trackBehaviour } from '../scripts/behaviour'
+      import { listenForSecrets } from '../scripts/secrets'
+
+      trackBehaviour()
+      listenForSecrets()
+    </script>
+  </body>
+</html>

@@ -1,0 +1,225 @@
+---
+// Me, in simple shapes: curly hair, black frames, plaid shirt. It's drawn back to front, so
+// later things sit on top. Each prop belongs to an outfit (see src/data/character.ts) and only
+// shows when the avatar's data-class matches; the costumes in Stories follow data-costume.
+// Moods, blinks and the speech bubble are in ./avatar.ts.
+
+interface Props {
+  /** prefixes the pattern ids, so two avatars on one page don't share them */
+  id: string
+  /** the class to start in; empty for none */
+  outfit?: string
+  class?: string
+  /** where it sits when it's drawn inside another drawing, like the room on the Character page */
+  at?: { x: number; y: number; width: number; height: number }
+}
+
+const { id, outfit = '', class: className, at } = Astro.props
+const p = (name: string) => `${id}-${name}`
+
+// stubble: two rows of dots along the jaw, leaving the mouth clear
+const stubble: [number, number][] = []
+for (let a = 30; a <= 150; a += 15) stubble.push([150 + 53 * Math.cos((a * Math.PI) / 180), 121 + 53 * Math.sin((a * Math.PI) / 180)])
+for (const a of [40, 55, 125, 140]) stubble.push([150 + 45 * Math.cos((a * Math.PI) / 180), 121 + 45 * Math.sin((a * Math.PI) / 180)])
+
+---
+
+<svg
+  class:list={['avatar', className]}
+  {...at}
+  viewBox="0 0 300 290"
+  role="img"
+  aria-label="A drawing of Arsal: curly hair, black glasses, a big smile"
+  data-avatar
+  data-class={outfit}
+>
+  <defs>
+    <pattern id={p('plaid')} width="24" height="24" patternUnits="userSpaceOnUse">
+      <rect width="24" height="24" style="fill: var(--suit)" stroke="none"></rect>
+      <rect y="9" width="24" height="6" class="ink" opacity="0.22"></rect>
+      <rect x="9" width="6" height="24" class="ink" opacity="0.22"></rect>
+      <path d="M0 21.5h24M21.5 0v24" style="stroke: var(--card)" stroke-width="1.4" opacity="0.5"></path>
+    </pattern>
+    <pattern id={p('scarf')} width="18" height="18" patternUnits="userSpaceOnUse" patternTransform="rotate(35)">
+      <rect width="18" height="18" fill="#b3261e" stroke="none"></rect>
+      <rect width="9" height="18" fill="#f2b632" stroke="none"></rect>
+    </pattern>
+    <pattern id={p('strings')} width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(24)">
+      <path d="M0 0H7M0 0V7" style="stroke: var(--ink)" stroke-width="1.2" opacity="0.55"></path>
+    </pattern>
+    <radialGradient id={p('aura')}>
+      <stop offset="0.45" stop-color="#ffe066" stop-opacity="0.85"></stop>
+      <stop offset="1" stop-color="#ffd23a" stop-opacity="0"></stop>
+    </radialGradient>
+  </defs>
+
+  <!-- behind everything: the power-up glow, the cape, the headband's tails -->
+  <g data-acc="power"><ellipse class="av-aura" cx="150" cy="150" rx="140" ry="148" fill={`url(#${p('aura')})`} stroke="none"></ellipse></g>
+  <g data-acc="bat"><path d="M78 224 L36 292 L264 292 L222 224 Z" fill="#33364a"></path></g>
+  <g data-acc="ninja" stroke-width="3" fill="#2b3a67">
+    <path d="M204 100 Q232 100 246 116 L240 122 Q228 110 204 110 Z"></path>
+    <path d="M204 106 Q226 112 236 132 L229 135 Q220 118 204 114 Z"></path>
+  </g>
+
+  <!-- body, and what's worn on it -->
+  <path class="av-body" d="M54 296 C56 234 94 208 150 208 C206 208 244 234 246 296 Z" fill={`url(#${p('plaid')})`}></path>
+  <path class="none" d="M130 210 L150 232 L170 210"></path>
+  <g data-acc="traveller">
+    <rect x="98" y="214" width="18" height="80" rx="7" style="fill: var(--yellow)"></rect>
+    <rect x="184" y="214" width="18" height="80" rx="7" style="fill: var(--yellow)"></rect>
+  </g>
+  <g data-acc="wizard">
+    <path d="M100 208 Q150 236 200 208 L205 224 Q150 254 95 224 Z" fill={`url(#${p('scarf')})`}></path>
+    <rect x="166" y="228" width="22" height="54" rx="4" transform="rotate(-8 177 255)" fill={`url(#${p('scarf')})`}></rect>
+  </g>
+
+  <!-- head and face -->
+  <rect class="skin" x="133" y="168" width="34" height="46" rx="12"></rect>
+  <circle class="skin av-ear" cx="90" cy="128" r="12"></circle>
+  <circle class="skin av-ear" cx="210" cy="128" r="12"></circle>
+  <circle class="skin" cx="150" cy="121" r="60"></circle>
+  <g class="ink av-stubble" opacity="0.4">
+    {stubble.map(([x, y]) => <circle cx={x.toFixed(1)} cy={y.toFixed(1)} r="1.8" />)}
+  </g>
+  <path class="none av-mouth av-mouth--smile" d="M131 158 Q150 175 169 158"></path>
+  <path class="ink av-mouth av-mouth--grin" d="M127 155 Q150 186 173 155 Z"></path>
+  <ellipse class="ink av-mouth av-mouth--o" cx="150" cy="164" rx="8" ry="10"></ellipse>
+  <path class="none" d="M152 134 Q146 147 154 148" stroke-width="4"></path>
+
+  <!-- hair: curls, unless a costume swaps or covers them -->
+  <g class="ink av-hair">
+    <circle cx="104" cy="98" r="17"></circle>
+    <circle cx="110" cy="72" r="20"></circle>
+    <circle cx="130" cy="55" r="21"></circle>
+    <circle cx="154" cy="49" r="22"></circle>
+    <circle cx="178" cy="55" r="21"></circle>
+    <circle cx="196" cy="72" r="19"></circle>
+    <circle cx="200" cy="98" r="16"></circle>
+    <circle cx="133" cy="76" r="16"></circle>
+    <circle cx="158" cy="70" r="17"></circle>
+    <circle cx="180" cy="80" r="14"></circle>
+    <circle cx="117" cy="84" r="12"></circle>
+    <circle cx="93" cy="112" r="9"></circle>
+    <circle cx="207" cy="112" r="9"></circle>
+  </g>
+  <g data-acc="ninja">
+    <path
+      fill="#ffd23a"
+      d="M92 116 L70 78 L104 88 L94 40 L128 70 L140 16 L158 64 L186 24 L186 72 L220 54 L206 96 L230 104 L208 118 Q150 76 92 116 Z"
+    ></path>
+    <path d="M90 100 Q150 76 210 100 L210 114 Q150 90 90 114 Z" fill="#2b3a67" stroke-width="4"></path>
+    <rect x="130" y="80" width="40" height="17" rx="3" fill="#cfd4dd" stroke-width="3.5"></rect>
+    <circle class="ink" cx="136" cy="88.5" r="1.8"></circle>
+    <circle class="ink" cx="164" cy="88.5" r="1.8"></circle>
+    <path class="none" d="M104 146 L120 149 M103 154 L120 155 M107 162 L122 161 M180 149 L196 146 M180 155 L197 154 M178 161 L193 162" stroke-width="3"></path>
+  </g>
+  <g data-acc="bat">
+    <path
+      fill="#33364a"
+      d="M93 150 A64 64 0 0 1 112 69.5 L114 24 L136 58.6 A64 64 0 0 1 164 58.6 L186 24 L188 69.5 A64 64 0 0 1 207 150 L198 157 Q177 146 160 150 L150 161 L140 150 Q123 146 102 157 Z"
+    ></path>
+  </g>
+  <g data-acc="wizard"><path class="none" d="M146 86 L154 94 L146 96 L155 106" stroke-width="4"></path></g>
+  <g data-acc="artist">
+    <ellipse cx="158" cy="34" rx="58" ry="17" transform="rotate(-7 158 34)" style="fill: var(--red)"></ellipse>
+    <circle class="ink" cx="166" cy="15" r="5"></circle>
+  </g>
+  <g data-acc="pirate">
+    <ellipse cx="152" cy="66" rx="92" ry="17" fill="#f3c76b"></ellipse>
+    <path d="M102 66 C102 26 122 12 152 12 C182 12 202 26 202 66 Z" fill="#f3c76b"></path>
+    <path d="M102 52 Q152 44 202 52 L202 66 L102 66 Z" style="fill: var(--red)"></path>
+  </g>
+
+  <g class="none av-brows">
+    <path d="M111 104 Q125 97 140 103"></path>
+    <path d="M160 103 Q175 97 189 104"></path>
+  </g>
+
+  <g class="av-eyes">
+    <circle class="ink av-eye" cx="126" cy="126" r="5.4"></circle>
+    <circle class="ink av-eye" cx="174" cy="126" r="5.4"></circle>
+  </g>
+
+  <g class="av-glasses">
+    <rect class="av-lens" x="105" y="110" width="42" height="31" rx="9"></rect>
+    <rect class="av-lens" x="153" y="110" width="42" height="31" rx="9"></rect>
+    <path class="none" d="M147 121 Q150 117 153 121 M105 118 L92 114 M195 118 L208 114"></path>
+  </g>
+  <g data-acc="wizard" class="none">
+    <circle cx="126" cy="126" r="19"></circle>
+    <circle cx="174" cy="126" r="19"></circle>
+    <path d="M145 123 Q150 119 155 123 M107 121 L92 116 M193 121 L208 116"></path>
+  </g>
+
+  <!-- the Engineer's headset -->
+  <g data-acc="engineer">
+    <path class="none" d="M84 120 C80 30 220 30 216 120" stroke-width="9"></path>
+    <rect x="74" y="108" width="22" height="40" rx="9" style="fill: var(--red)"></rect>
+    <rect x="204" y="108" width="22" height="40" rx="9" style="fill: var(--red)"></rect>
+    <path class="none" d="M86 144 Q92 178 128 171"></path>
+    <circle class="ink" cx="132" cy="170" r="7"></circle>
+  </g>
+
+  <!-- held things: left hand first, then right -->
+  <g data-acc="barista">
+    <g class="none av-steam" stroke-width="4">
+      <path d="M34 192 q-7 -10 0 -20 q7 -10 0 -20"></path>
+      <path d="M54 192 q-7 -10 0 -20 q7 -10 0 -20"></path>
+    </g>
+    <path d="M16 210 L24 272 L64 272 L72 210 Z" style="fill: var(--card)"></path>
+    <path d="M19 228 L69 228 L66 252 L22 252 Z" style="fill: var(--blue)"></path>
+    <rect x="11" y="199" width="66" height="12" rx="4" style="fill: var(--card)"></rect>
+  </g>
+  <g data-acc="foodie">
+    <g class="none av-steam" stroke-width="4">
+      <path d="M30 206 q-6 -9 0 -18 q6 -9 0 -18"></path>
+      <path d="M58 206 q-6 -9 0 -18 q6 -9 0 -18"></path>
+    </g>
+    <circle cx="30" cy="226" r="6" style="fill: var(--card)" stroke-width="3.5"></circle>
+    <circle cx="44" cy="222" r="7" style="fill: var(--card)" stroke-width="3.5"></circle>
+    <circle cx="58" cy="226" r="6" style="fill: var(--card)" stroke-width="3.5"></circle>
+    <path d="M8 230 Q44 286 80 230 Z" style="fill: var(--red)"></path>
+    <path class="none" d="M4 230 L84 230" stroke-width="6"></path>
+    <path class="none" d="M50 228 L90 184 M58 230 L96 190" stroke-width="4.5"></path>
+  </g>
+  <g data-acc="athlete">
+    <!-- a table-tennis bat, and the ball bouncing on it -->
+    <rect x="74" y="216" width="16" height="36" rx="5" transform="rotate(-45 82 234)" style="fill: var(--card)"></rect>
+    <circle cx="48" cy="196" r="31" style="fill: var(--red)"></circle>
+    <circle class="av-ball" cx="40" cy="110" r="9" style="fill: var(--card)" stroke-width="4"></circle>
+  </g>
+  <g data-acc="researcher">
+    <circle cx="246" cy="226" r="27" style="fill: var(--card)" stroke-width="7"></circle>
+    <!-- an eye in the lens: I see you -->
+    <path d="M229 226 Q246 210 263 226 Q246 242 229 226 Z" style="fill: var(--card)" stroke-width="4"></path>
+    <circle class="ink" cx="246" cy="226" r="5.5"></circle>
+    <path class="none" d="M266 246 L290 272" stroke-width="11"></path>
+  </g>
+  <g data-acc="artist">
+    <!-- a pencil, sharpened -->
+    <g transform="rotate(33 250 236)" stroke-width="3.5">
+      <rect x="242" y="204" width="16" height="62" style="fill: var(--yellow)"></rect>
+      <path d="M242 204 L250 184 L258 204 Z" fill="#f0d2a8"></path>
+      <path class="ink" d="M246.8 192 L250 184 L253.2 192 Z"></path>
+      <rect x="242" y="266" width="16" height="7" fill="#c8c4bb"></rect>
+      <rect x="242" y="273" width="16" height="12" rx="4" style="fill: var(--pink)"></rect>
+    </g>
+  </g>
+  <g data-acc="athlete">
+    <!-- a badminton racket, and the shuttle -->
+    <ellipse cx="252" cy="172" rx="27" ry="36" transform="rotate(24 252 172)" fill={`url(#${p('strings')})`} stroke-width="6"></ellipse>
+    <path class="none" d="M238 205 L218 266" stroke-width="6"></path>
+    <path class="none" d="M220 258 L212 286" stroke-width="11"></path>
+    <path d="M253 98 L240 74 L282 74 L270 98 Z" style="fill: var(--card)" stroke-width="4"></path>
+    <path class="none" d="M254 74 L258 96 M268 74 L265 96" stroke-width="2.5"></path>
+    <circle cx="261.5" cy="104" r="8" style="fill: var(--red)" stroke-width="4"></circle>
+  </g>
+  <g data-acc="traveller">
+    <path d="M256 158 C236 158 230 180 256 212 C282 180 276 158 256 158 Z" style="fill: var(--red)"></path>
+    <circle cx="256" cy="176" r="7" style="fill: var(--card)" stroke-width="4"></circle>
+  </g>
+  <g data-acc="wizard">
+    <path class="none" d="M224 278 L282 190" stroke-width="7"></path>
+    <path class="av-sparkle" d="m286 168 3.2 7.4 7.8.6-6 5.1 1.9 7.6-6.9-4.1-6.9 4.1 1.9-7.6-6-5.1 7.8-.6Z" style="fill: var(--yellow)" stroke-width="3"></path>
+  </g>
+</svg>

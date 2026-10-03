@@ -1,0 +1,32 @@
+---
+// Sketching: a quick pencil self-portrait that draws itself, line by line, in ./sketch.ts.
+const lines = [
+  // head
+  'M120 38 C147 37 166 58 165 85 C164 111 145 129 119 128 C93 127 75 109 76 83 C77 58 95 39 120 38',
+  // curls
+  'M80 72 C68 54 84 34 100 41 C101 24 125 19 133 32 C144 20 166 29 160 45 C175 47 173 67 162 72',
+  'M92 58 C95 47 108 46 110 55 M118 47 C122 38 135 40 134 49 M141 53 C147 46 156 50 153 59',
+  // glasses
+  'M88 77 H114 Q120 77 120 83 V95 Q120 101 114 101 H88 Q82 101 82 95 V83 Q82 77 88 77',
+  'M126 77 H152 Q158 77 158 83 V95 Q158 101 152 101 H126 Q120 101 120 95 V83 Q120 77 126 77',
+  'M118 85 Q120 82 122 85 M82 84 L74 80 M158 84 L166 80',
+  // eyes, nose, smile
+  'M98 89 h4 M138 89 h4',
+  'M121 98 Q115 108 123 109',
+  'M103 113 Q120 126 137 113',
+  // neck and shoulders
+  'M108 127 V139 M132 127 V139 M58 168 C62 147 85 139 108 139 M132 139 C155 139 178 147 182 168',
+  // a little shading, and the signature
+  'M147 109 l9 -9 M151 113 l9 -9 M155 117 l7 -7',
+  'M196 158 l6 -14 l6 14 M199 152 h7 M213 158 h0.5',
+]
+---
+
+<div class="widget" data-widget="sketch">
+  <div class="sketchbook">
+    <svg class="sketch" viewBox="0 0 240 170" role="img" aria-label="A pencil sketch of Arsal: curly hair, glasses, a smile">
+      {lines.map((d, i) => <path d={d} pathLength="1" style={`--i: ${i}`} />)}
+    </svg>
+  </div>
+  <button class="btn btn--small widget__action" type="button" data-redraw style="--hue: var(--blue)">Sketch it again</button>
+</div>

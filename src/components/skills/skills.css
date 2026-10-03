@@ -1,0 +1,165 @@
+/* The skill tree. */
+
+.tree {
+  position: relative;
+  display: grid;
+  gap: 16px;
+}
+.branch {
+  --hue: var(--green);
+  display: grid;
+  grid-template-columns: 172px 1fr;
+  align-items: center;
+  gap: 18px;
+}
+.branch__root {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px;
+  border: var(--stroke) solid var(--ink);
+  border-radius: 13px;
+  background: var(--hue);
+  color: var(--on-hue);
+  box-shadow: 4px 4px 0 var(--shadow);
+  font: 700 14px/1 var(--display);
+  letter-spacing: -0.01em;
+}
+.branch__root .shape {
+  --hue: var(--card);
+}
+.branch__nodes {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 0;
+}
+.node {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  padding: 6px 13px 6px 6px;
+  margin-right: 26px;
+  border: 1.5px solid var(--ink);
+  border-radius: 999px;
+  background: var(--card);
+  font: 500 13.5px/1 var(--mono);
+  transition:
+    transform 0.25s var(--spring),
+    background 0.2s,
+    box-shadow 0.2s;
+}
+.node.is-core {
+  background: color-mix(in srgb, var(--hue) 30%, var(--card));
+}
+/* the link to the next node */
+.node::after {
+  content: '';
+  position: absolute;
+  left: 100%;
+  top: 50%;
+  width: 26px;
+  border-top: 2px solid var(--ink);
+  opacity: 0.35;
+}
+.node:last-child::after {
+  display: none;
+}
+/* the logo sits on a light disc in both themes, so dark logos stay visible */
+.node__mark {
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  border: 1.5px solid #17150f;
+  border-radius: 50%;
+  background: #fbf8f2;
+  transition: scale 0.3s var(--spring);
+}
+.node__mark img,
+.node__mark svg {
+  width: 16px;
+  height: 16px;
+}
+.node__mark svg {
+  fill: none;
+  stroke: #17150f;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.node:hover,
+.node.is-lit {
+  transform: translateY(-3px);
+  box-shadow: 3px 3px 0 var(--shadow);
+}
+.node:hover .node__mark,
+.node.is-lit .node__mark {
+  scale: 1.15;
+}
+.tree__legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 24px;
+  margin-top: 28px;
+  color: var(--ink-2);
+  font: 500 12.5px/1.5 var(--mono);
+}
+.tree__legend span {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.tree__legend i {
+  width: 24px;
+  height: 13px;
+  border: 1.5px solid var(--ink);
+  border-radius: 999px;
+  background: var(--card);
+}
+.tree__legend i.is-core {
+  background: color-mix(in srgb, var(--green) 30%, var(--card));
+}
+.passive {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  margin-top: 40px;
+  padding: 20px 22px;
+  border: var(--stroke) dashed var(--ink);
+  border-radius: var(--radius);
+}
+/* the star spins on a plain box around it: spinning the svg itself would be redrawn on every
+   frame, while a box's spin is left to the graphics card */
+.passive__spin {
+  display: grid;
+  flex: none;
+  animation: spin 9s linear infinite;
+}
+@keyframes spin {
+  to {
+    rotate: 360deg;
+  }
+}
+.passive p {
+  font-size: 16px;
+  color: var(--ink-2);
+}
+.passive b {
+  color: var(--ink);
+}
+.passive + .fineprint {
+  margin-top: 14px;
+}
+
+@media (max-width: 720px) {
+  .branch {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  .branch__root {
+    justify-self: start;
+  }
+}

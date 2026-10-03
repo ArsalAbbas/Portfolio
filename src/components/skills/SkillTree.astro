@@ -1,0 +1,56 @@
+---
+// 02 Skill tree: the tools I work with, one branch per area. The list is in src/data/skills.ts.
+import { branches, passiveSkill } from '../../data/skills'
+import SectionHead from '../shared/SectionHead.astro'
+import Shape from '../shared/Shape.astro'
+import SkillNode from './SkillNode.astro'
+---
+
+<section class="section" id="skills" data-section="skills">
+  <div class="wrap">
+    <SectionHead
+      n="02"
+      shape="triangle"
+      hue="green"
+      kicker="Skill tree"
+      title="What I build with"
+      sub="The tools I work with, area by area. The filled ones are what I reach for every day."
+    />
+
+    <div class="tree">
+      {
+        branches.map((b) => (
+          <div class="branch" style={`--hue: var(--${b.hue})`}>
+            <div class="branch__root">
+              <Shape name={b.shape} size={18} />
+              {b.name}
+            </div>
+            <ul class="branch__nodes" aria-label={b.name}>
+              {b.skills.map((skill, i) => (
+                <SkillNode skill={skill} i={i} />
+              ))}
+            </ul>
+          </div>
+        ))
+      }
+    </div>
+
+    <p class="tree__legend">
+      <span><i class="is-core"></i> Daily driver</span>
+      <span><i></i> Used it, liked it</span>
+      <span>Unspent skill points: 0</span>
+    </p>
+
+    <div class="passive" style="--hue: var(--yellow)">
+      <span class="passive__spin"><Shape name="star" size={30} /></span>
+      <p><b>Passive skill:</b> {passiveSkill}</p>
+    </div>
+    <p class="fineprint">Logos belong to their owners, and are here only to name the tools.</p>
+  </div>
+</section>
+
+<script>
+  import { initTree } from './tree'
+
+  initTree()
+</script>
