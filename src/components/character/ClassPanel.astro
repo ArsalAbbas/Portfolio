@@ -1,16 +1,16 @@
 ---
-// The panel for one class: a few words, maybe a photo, and the class's toy from ./widgets.
+// The panel for one class: a few words, maybe a picture, and maybe a toy from ./widgets.
 import { Image } from 'astro:assets'
-import desk from '../../assets/photos/desk.webp'
+import circles from '../../assets/art/circles.webp'
+import coffee from '../../assets/photos/coffee.webp'
 import focus from '../../assets/photos/focus.webp'
+import tableTennis from '../../assets/photos/table-tennis.webp'
 import type { CharacterClass, Widget } from '../../data/character'
 import Dishes from './widgets/Dishes.astro'
 import FieldNotes from './widgets/FieldNotes.astro'
 import Kalimba from './widgets/Kalimba.astro'
-import Rally from './widgets/Rally.astro'
-import Route from './widgets/Route.astro'
 import Sketch from './widgets/Sketch.astro'
-import Stats from './widgets/Stats.astro'
+import Slides from './widgets/Slides.astro'
 import V60 from './widgets/V60.astro'
 
 interface Props {
@@ -19,21 +19,30 @@ interface Props {
   open: boolean
 }
 
+interface Photo {
+  src: ImageMetadata
+  alt: string
+  /** shown whole, and wider: artwork, and scenes too busy to crop small. The rest are cropped to 4:3 */
+  wide?: boolean
+  /** which part of a photo the crop keeps, as a CSS object-position */
+  crop?: string
+}
+
 const { cls, open } = Astro.props
-const widgets: Record<Widget, typeof Stats> = {
-  stats: Stats,
+const widgets: Record<Widget, typeof Sketch> = {
   fieldnotes: FieldNotes,
   sketch: Sketch,
   v60: V60,
   dishes: Dishes,
-  route: Route,
-  rally: Rally,
+  slides: Slides,
   kalimba: Kalimba,
 }
-const Toy = widgets[cls.widget]
-const photos: Partial<Record<CharacterClass['id'], { src: ImageMetadata; alt: string }>> = {
+const Toy = cls.widget && widgets[cls.widget]
+const photos: Partial<Record<CharacterClass['id'], Photo>> = {
   engineer: { src: focus, alt: 'Arsal working on a laptop in a café' },
-  barista: { src: desk, alt: 'Arsal at a café table with a coffee and a laptop' },
+  researcher: { src: circles, alt: 'Three superhero faces drawn with circles', wide: true },
+  barista: { src: coffee, alt: 'A frothy coffee in a white cup, up close', crop: '50% 20%' },
+  athlete: { src: tableTennis, alt: 'Arsal playing table tennis', wide: true },
 }
 const photo = photos[cls.id]
 ---
@@ -49,7 +58,18 @@ const photo = photos[cls.id]
 >
   <h2>{cls.name}</h2>
   <p>{cls.blurb}</p>
-  {photo && <Image class="panel__photo" src={photo.src} alt={photo.alt} widths={[320, 560]} sizes="280px" />}
+  {
+    photo && (
+      <Image
+        class={photo.wide ? 'panel__photo panel__photo--wide' : 'panel__photo'}
+        src={photo.src}
+        alt={photo.alt}
+        widths={photo.wide ? [480, 840] : [320, 560]}
+        sizes={photo.wide ? '420px' : '280px'}
+        style={photo.crop && `object-position: ${photo.crop}`}
+      />
+    )
+  }
   {
     cls.costumes && (
       <button class="btn btn--small panel__costume" type="button" data-costume-next data-costumes={JSON.stringify(cls.costumes)} style="--hue: var(--pink)">
@@ -57,6 +77,5 @@ const photo = photos[cls.id]
       </button>
     )
   }
-  <Toy />
-  {cls.psst && <p class="fineprint panel__psst">{cls.psst}</p>}
+  {Toy && <Toy />}
 </div>

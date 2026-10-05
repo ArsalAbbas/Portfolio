@@ -123,7 +123,7 @@
   fill: none;
 }
 
-/* I don't feel so good: dust, then better */
+/* the snap: dust, then better */
 .is-dusted {
   animation: dust 1.4s var(--ease) forwards;
 }

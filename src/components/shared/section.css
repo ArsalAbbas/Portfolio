@@ -2,9 +2,10 @@
 
 .section {
   position: relative;
-  padding-block: clamp(80px, 11vw, 150px);
+  padding-block: clamp(64px, 8.5vw, 120px);
 }
-.section + .section {
+/* a dashed line between sections: `~`, not `+`, because a component's <script> can sit between two */
+.section ~ .section {
   border-top: 1.5px dashed var(--line);
 }
 /* the first thing on a page, right under the HUD */

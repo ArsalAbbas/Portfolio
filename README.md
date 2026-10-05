@@ -31,8 +31,8 @@ The words are in `src/data`, so most edits never touch a component:
 - `src/data/site.ts`: name, links, email, and the four sections
 - `src/data/quests.ts`: what I work on, area by area
 - `src/data/skills.ts`: the skill tree
-- `src/data/character.ts`: the work roles and categories, stats, dishes, what's on the shelf in the room, and the kalimba's notes. It's a persona, not a profile: the gist, never the full list
-- `src/data/secrets.ts`: the easter eggs you can type
+- `src/data/character.ts`: the work roles and categories, dishes, what's on the shelf in the room, and the kalimba's notes. It's a persona, not a profile: the gist, never the full list
+- `src/data/secrets.ts`: the easter eggs you can type, one word each, and what in the hideout gives each one away
 
 `src/components` has one folder per part of the site. Each keeps its markup, styles and script side by side:
 
@@ -41,6 +41,8 @@ The words are in `src/data`, so most edits never touch a component:
 - `character/`: the Character page, with each panel's toy in `character/widgets/`
 - `avatar/`: the drawing of me, and what makes it blink and talk
 - `shared/`: shapes, emblems and section headings
+
+The Travel slideshow shows whatever pictures are in `src/assets/travel/` (create it if it's missing), in name order. Name each file for the view, not the place: `misty-hills.jpg` is what a screen reader hears as "Misty hills". Until there's a picture there, Travel shows no slideshow.
 
 `src/scripts` has what every page shares: the theme, toasts, confetti and easter eggs, and the field notes. `src/styles/global.css` lists every stylesheet, in order.
 

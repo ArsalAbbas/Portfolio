@@ -1,15 +1,20 @@
-// The hideout: poke anything in the room and the avatar has something to say about it. The lamp
+// The hideout: poke anything in the room and the avatar has something to say about it. On a
+// keyboard, a few things start by giving away a word to type, from src/data/secrets.ts. The lamp
 // is a second light switch, the clock keeps India time, and the eyes follow you while the room is
 // on screen.
 
+import { secrets } from '../../data/secrets'
 import { currentTheme, setTheme } from '../../scripts/theme'
-import { $, onceVisible, reducedMotion, whileVisible } from '../../scripts/util'
+import { $, coarsePointer, onceVisible, reducedMotion, whileVisible } from '../../scripts/util'
 import { AvatarCtl } from '../avatar/avatar'
 
+const FIGURE = ['Careful. That one’s a collectible.', 'Mint condition. Mostly.', 'Every desk needs a sidekick.']
 const LINES: Record<string, string[]> = {
   window: ['Where to next?', 'Mountains, ideally.', 'Window seat, please.'],
   notes: ['Notes on you. All good ones.', 'Ideas. Some of them good.', 'Sticky notes: my real to-do app.'],
-  figure: ['Careful. That one’s a collectible.', 'Mint condition. Mostly.', 'Every desk needs a sidekick.'],
+  figure: FIGURE,
+  caped: FIGURE,
+  robot: FIGURE,
   book: ['Saving that spot for something good.', 'That one’s still blank.'],
   disc: ['Track three is the good one.', 'On repeat, lately.'],
   plant: ['Still alive. Barely.', 'I water it. Sometimes.'],
@@ -26,9 +31,12 @@ export function initRoom() {
   if (!room || !scene || !svg) return
 
   const avatar = new AvatarCtl(svg, $('[data-room-bubble]', room), ['Oh, hi.', 'Shh. Deploying.', 'Five more minutes.'])
+  // a touchscreen has nothing to type with, so it just gets the chat
+  const hints = coarsePointer() ? [] : secrets
   const said: Record<string, number> = {}
   const next = (kind: string) => {
-    const lines = LINES[kind] ?? []
+    const words = hints.filter((s) => s.hint === kind).map((s) => `Psst: type “${s.word}” anywhere.`)
+    const lines = [...words, ...(LINES[kind] ?? [])]
     said[kind] = (said[kind] ?? -1) + 1
     return lines[said[kind] % lines.length]
   }

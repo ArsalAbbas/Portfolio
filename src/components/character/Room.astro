@@ -1,8 +1,9 @@
 ---
 // The hideout, at the bottom of the Character page: me at my desk with a laptop and a coffee,
 // under a shelf of books, discs and figures, by a window onto the hills. Poke anything and the
-// avatar has something to say about it (./room.ts). The lamp doubles as the light switch, and at
-// night the room goes dark around it. The figures are no one in particular.
+// avatar has something to say about it (./room.ts); a few things give away the words you can type
+// for the easter eggs in src/data/secrets.ts. The lamp doubles as the light switch, and at night
+// the room goes dark around it. The figures are no one in particular.
 //
 // What's in `shelf` in src/data/character.ts goes on the shelf first, and plain spines and cases
 // fill the rest. Drawn in the avatar's ink and colours, whatever the theme; styles in ./room.css.
@@ -245,7 +246,7 @@ const stars = [
           )
         if (s.kind === 'caped')
           return (
-            <g class="room__item" data-poke="figure" transform={`translate(${s.x} 112)`} role="button" tabindex="0" aria-label="A caped figure">
+            <g class="room__item" data-poke="caped" transform={`translate(${s.x} 112)`} role="button" tabindex="0" aria-label="A caped figure">
               <g class="room__lift" stroke-width="3">
                 <ellipse cx="22" cy="-3" rx="20" ry="4.5" class="room__ink" stroke="none" />
                 <path d="M12 -50 L32 -50 L42 -8 L2 -8 Z" style="fill: var(--red)" />
@@ -262,7 +263,7 @@ const stars = [
           )
         if (s.kind === 'robot')
           return (
-            <g class="room__item" data-poke="figure" transform={`translate(${s.x} 112)`} role="button" tabindex="0" aria-label="A little robot">
+            <g class="room__item" data-poke="robot" transform={`translate(${s.x} 112)`} role="button" tabindex="0" aria-label="A little robot">
               <g class="room__lift" stroke-width="3">
                 <ellipse cx="21" cy="-3" rx="19" ry="4.5" class="room__ink" stroke="none" />
                 <path d="M14 -22 V-6 M28 -22 V-6 M21 -66 V-74" fill="none" stroke-width="6" />

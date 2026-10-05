@@ -148,6 +148,18 @@
   letter-spacing: 0.06em;
   text-transform: uppercase;
 }
+/* on a phone: smaller, and a table that still doesn't fit scrolls sideways instead of widening the page */
+@media (max-width: 560px) {
+  .prose table {
+    display: block;
+    overflow-x: auto;
+    font-size: 0.8em;
+  }
+  .prose th,
+  .prose td {
+    padding: 7px 8px;
+  }
+}
 
 /* code colours, light and dark */
 :root {

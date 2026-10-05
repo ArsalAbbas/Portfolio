@@ -9,8 +9,8 @@ import type { Hue, ShapeName } from './site'
 /** also the outfit the avatar wears, in src/components/avatar */
 export type ClassId = 'engineer' | 'researcher' | 'artist' | 'barista' | 'foodie' | 'traveller' | 'athlete' | 'bard'
 
-/** the toy in each panel, in src/components/character/widgets */
-export type Widget = 'stats' | 'fieldnotes' | 'sketch' | 'v60' | 'dishes' | 'route' | 'rally' | 'kalimba'
+/** the toys in the panels, in src/components/character/widgets */
+export type Widget = 'fieldnotes' | 'sketch' | 'v60' | 'dishes' | 'slides' | 'kalimba'
 
 export interface Costume {
   id: 'wizard' | 'bat' | 'ninja' | 'pirate'
@@ -28,11 +28,10 @@ export interface CharacterClass {
   blurb: string
   /** what the avatar says when you pick it, then when you poke it */
   lines: string[]
-  widget: Widget
+  /** the panel's toy, if it has one */
+  widget?: Widget
   /** outfits the costume button cycles through */
   costumes?: Costume[]
-  /** a small hint at the bottom of the panel, for keyboards only */
-  psst?: string
 }
 
 export const classes: CharacterClass[] = [
@@ -45,7 +44,6 @@ export const classes: CharacterClass[] = [
     blurb:
       'Product engineer at SquadStack.ai since January 2024. I started on the front end and kept walking: mobile apps, then the backend, then real-time voice AI.',
     lines: ['Ship it.', 'It works on my machine.', 'Have you tried turning it off and on again?', 'One more PR, then lunch.'],
-    widget: 'stats',
   },
   {
     id: 'researcher',
@@ -96,7 +94,7 @@ export const classes: CharacterClass[] = [
     hue: 'yellow',
     blurb: 'I’ve travelled to a lot of places, and I’m usually planning the next one. Mountains if I get to choose.',
     lines: ['Where to next?', 'Window seat, please.', 'I know a place.'],
-    widget: 'route',
+    widget: 'slides',
   },
   {
     id: 'athlete',
@@ -106,7 +104,6 @@ export const classes: CharacterClass[] = [
     hue: 'green',
     blurb: 'Usually up for a game, once the work’s done.',
     lines: ['Smash!', 'That was in.', 'Best of three?', 'Your serve.'],
-    widget: 'rally',
   },
   {
     id: 'bard',
@@ -123,7 +120,6 @@ export const classes: CharacterClass[] = [
       { id: 'ninja', line: 'Believe it!' },
       { id: 'pirate', line: 'I’m gonna be King of the Pirates!' },
     ],
-    psst: 'A few of these stories left small secrets on this site. Try typing “winter is coming”.',
   },
 ]
 
@@ -133,14 +129,6 @@ export const heroLines = [
   'Psst. You can throw those shapes.',
   'I build voice AI. The rest of me lives on the Character page.',
   'Okay, that tickles.',
-]
-
-/** On GitHub, since January 2024. Rounded down, so they stay true for a while. */
-export const stats = [
-  { label: 'Pull requests opened', value: '750+' },
-  { label: 'Reviewed for teammates', value: '450+' },
-  { label: 'Commits, give or take', value: '1,800+' },
-  { label: 'Cups of coffee', value: 'Too many' },
 ]
 
 export interface ShelfItem {
@@ -166,9 +154,16 @@ export const dishes = [
   { id: 'chai', name: 'Chai', note: 'Not a dish. Still essential.' },
 ] as const
 
-/** Nine notes in C major, from the middle of a kalimba outwards. Public-domain tunes only. */
+/** The seventeen notes of a standard kalimba in C major, lowest first. Public-domain tunes only. */
 export const kalimba = {
   notes: [
+    { name: 'C', hz: 261.63 },
+    { name: 'D', hz: 293.66 },
+    { name: 'E', hz: 329.63 },
+    { name: 'F', hz: 349.23 },
+    { name: 'G', hz: 392.0 },
+    { name: 'A', hz: 440.0 },
+    { name: 'B', hz: 493.88 },
     { name: 'C', hz: 523.25 },
     { name: 'D', hz: 587.33 },
     { name: 'E', hz: 659.25 },
@@ -178,6 +173,7 @@ export const kalimba = {
     { name: 'B', hz: 987.77 },
     { name: 'C', hz: 1046.5 },
     { name: 'D', hz: 1174.66 },
+    { name: 'E', hz: 1318.51 },
   ],
   /** Twinkle, Twinkle, Little Star: note numbers from `notes`, and beats */
   tune: [

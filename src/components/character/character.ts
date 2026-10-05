@@ -81,21 +81,12 @@ export function initCharacter() {
     })
   }
 
-  // the photo behind the drawing
-  const real = $<HTMLButtonElement>('[data-true-form]', root)
-  real?.addEventListener('click', () => {
-    const on = frame.classList.toggle('is-true')
-    real.setAttribute('aria-pressed', String(on))
-    real.textContent = on ? 'Back to shapes' : 'Reveal true form'
-    say(on ? 'Yep, that’s what I actually look like.' : 'Back to circles and squares.')
-  })
-
   // the eyes follow you while the card is on screen
   let inView = false
   new IntersectionObserver(([e]) => (inView = e.isIntersecting)).observe(frame)
   addEventListener('pointermove', (e) => inView && avatar.lookAt(e.clientX, e.clientY), { passive: true })
 
-  // accio coffee: straight to Coffee, kettle already on
+  // accio: straight to Coffee, kettle already on
   const summon = (id: string) => {
     const tab = tabs.find((t) => t.dataset.class === id)
     if (!tab) return

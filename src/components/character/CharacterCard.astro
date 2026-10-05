@@ -1,8 +1,5 @@
 ---
-// The card on the left: the avatar in its class colours, a speech bubble, the class name, and
-// a button that swaps the drawing for a real photo.
-import { Image } from 'astro:assets'
-import portrait from '../../assets/photos/portrait.webp'
+// The card on the left: the avatar in its class colours, a speech bubble, and the class name.
 import type { CharacterClass } from '../../data/character'
 import Avatar from '../avatar/Avatar.astro'
 
@@ -17,20 +14,10 @@ const { first } = Astro.props
 <div class="card character__stage">
   <div class="character__frame" data-frame style={`--hue: var(--${first.hue})`}>
     <Avatar id="char" outfit={first.id} />
-    <Image
-      class="character__photo"
-      src={portrait}
-      alt="Arsal, smiling, arms folded on a café table"
-      widths={[480, 820]}
-      sizes="(max-width: 960px) 90vw, 460px"
-    />
   </div>
   <p class="bubble is-hidden" data-bubble aria-live="polite"></p>
   <div class="nameplate">
     <strong data-class-name>{first.name}</strong>
     <span class="mono" data-class-hobby>{first.hobby}</span>
   </div>
-  <button class="btn btn--small btn--ghost character__true" type="button" data-true-form aria-pressed="false">
-    Reveal true form
-  </button>
 </div>

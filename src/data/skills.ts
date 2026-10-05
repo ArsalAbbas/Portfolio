@@ -1,5 +1,5 @@
-// The tools I work with, grouped the same way as the quests. Logos are the official ones, in
-// public/logos; things without a logo get a simple drawn glyph instead.
+// The tools I work with, by area. Logos are the official ones, in public/logos; things without
+// an openly licensed logo get a simple drawn glyph instead.
 
 import type { Glyph } from '../components/skills/glyphs'
 import type { Hue, ShapeName } from './site'
@@ -8,7 +8,7 @@ export interface Skill {
   name: string
   /** a file in public/logos, without the .svg */
   logo?: string
-  /** a drawn icon, for ideas rather than products */
+  /** a drawn icon, for ideas, and for tools with no openly licensed logo */
   glyph?: Glyph
   /** what I reach for every day; drawn as a filled node */
   core?: boolean
@@ -27,11 +27,8 @@ export const branches: Branch[] = [
     shape: 'triangle',
     hue: 'green',
     skills: [
-      { name: 'Speech-to-text & TTS', glyph: 'waveform', core: true },
+      { name: 'LLM agents', glyph: 'bot', core: true },
       { name: 'WebRTC', logo: 'webrtc' },
-      { name: 'RAG', glyph: 'search' },
-      { name: 'Agent memory', glyph: 'brain' },
-      { name: 'Latency', glyph: 'timer' },
     ],
   },
   {
@@ -76,7 +73,6 @@ export const branches: Branch[] = [
     skills: [
       { name: 'Figma', logo: 'figma', core: true },
       { name: 'UX research', glyph: 'eye', core: true },
-      { name: 'Design docs', glyph: 'doc' },
     ],
   },
   {
@@ -85,8 +81,8 @@ export const branches: Branch[] = [
     hue: 'green',
     skills: [
       { name: 'Claude Code', logo: 'claude', core: true },
-      { name: 'Cursor', logo: 'cursor' },
-      { name: 'Agent skills', glyph: 'wand' },
+      { name: 'Conductor', glyph: 'workflow' },
+      { name: 'Wispr Flow', glyph: 'mic' },
     ],
   },
 ]

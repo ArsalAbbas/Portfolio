@@ -8,22 +8,6 @@
   font: 800 clamp(48px, 9vw, 120px)/0.95 var(--display);
   letter-spacing: -0.05em;
 }
-.continue__count {
-  display: inline-grid;
-  place-items: center;
-  width: 1.2em;
-  margin-left: 0.15em;
-  color: var(--red);
-  font-variant-numeric: tabular-nums;
-}
-.continue__count.is-tick {
-  animation: tick 0.3s var(--spring);
-}
-@keyframes tick {
-  from {
-    scale: 1.4;
-  }
-}
 .continue p {
   max-width: 36rem;
   margin: 22px auto 0;
@@ -43,7 +27,8 @@
   row-gap: 14px;
   margin-top: 26px;
 }
-.continue__over {
+/* beats `.continue p` above, which would make it as big as the paragraph */
+.continue .continue__thanks {
   margin-top: 18px;
   font: 600 13px/1.4 var(--mono);
   letter-spacing: 0.08em;

@@ -92,9 +92,9 @@ export function signal(ms = 4200) {
   }, ms)
 }
 
-/** I don't feel so good: half of what's on screen turns to dust, then thinks better of it. */
+/** The snap: half of what's on screen turns to dust, then thinks better of it. */
 export function dust() {
-  const targets = [...document.querySelectorAll<HTMLElement>('.quest, .node, .post-row, .toy, .chip, .picker button')].filter(onScreen)
+  const targets = [...document.querySelectorAll<Element>('.quest, .node, .post-row, .toy, .chip, .picker button, .room__item')].filter(onScreen)
   const doomed = targets.filter(() => Math.random() < 0.5)
   doomed.forEach((el, i) => setTimeout(() => el.classList.add('is-dusted'), i * 60))
   setTimeout(() => {

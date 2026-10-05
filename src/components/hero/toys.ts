@@ -1,6 +1,6 @@
 // The four shapes on the title screen. They orbit the avatar until you grab one; throw it and
-// it flies, bounces off the edges, knocks the letters of my name about, and says ow if it hits
-// the avatar's head. Then it drifts back into orbit.
+// it flies, bounces off the edges of the screen, knocks the letters of my name about, and says
+// ow if it hits the avatar's head. Then it drifts back into orbit.
 
 import { $, $$, clamp, reducedMotion } from '../../scripts/util'
 import type { AvatarCtl } from '../avatar/avatar'
@@ -45,6 +45,7 @@ export function initToys(hero: HTMLElement, stage: HTMLElement, avatar: AvatarCt
   const bodies = still ? [] : $$('[data-toy]', stage).map(makeBody)
 
   // geometry, refreshed on resize
+  const bar = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--hud')) || 0
   let box = stage.getBoundingClientRect()
   let bounds = { l: 0, t: 0, r: 0, b: 0 }
   let head = { x: 0, y: 0, r: 0 }
@@ -52,8 +53,15 @@ export function initToys(hero: HTMLElement, stage: HTMLElement, avatar: AvatarCt
   let letterBoxes: DOMRect[] = []
   function measure() {
     box = stage.getBoundingClientRect()
+    // the edges a shape bounces off: the part of the title screen you can see, so it never
+    // leaves the window or slips under the bar along the top
     const h = hero.getBoundingClientRect()
-    bounds = { l: h.left - box.left, t: h.top - box.top, r: h.right - box.left, b: h.bottom - box.top }
+    bounds = {
+      l: Math.max(h.left, 0) - box.left,
+      t: Math.max(h.top, bar) - box.top,
+      r: Math.min(h.right, document.documentElement.clientWidth) - box.left,
+      b: Math.min(h.bottom, innerHeight) - box.top,
+    }
     const a = svg.getBoundingClientRect()
     const s = a.width / 300
     head = { x: a.left - box.left + 150 * s, y: a.top - box.top + 121 * s, r: 60 * s }
@@ -62,9 +70,13 @@ export function initToys(hero: HTMLElement, stage: HTMLElement, avatar: AvatarCt
   }
   measure()
   addEventListener('resize', measure)
-  // scrolling moves the letters; measure them again the next time a throw needs them
-  let lettersMoved = false
-  addEventListener('scroll', () => (lettersMoved = true), { passive: true })
+  // scrolling moves all of that; measure again the next time a shape you're holding or have
+  // thrown needs it
+  let scrolled = false
+  addEventListener('scroll', () => (scrolled = true), { passive: true })
+  function remeasure() {
+    if (scrolled) ((scrolled = false), measure())
+  }
 
   function orbitTarget(b: Body, t: number) {
     // each shape starts its orbit in the corner where it rests before the script runs
@@ -84,6 +96,7 @@ export function initToys(hero: HTMLElement, stage: HTMLElement, avatar: AvatarCt
     el.addEventListener('pointerdown', (e) => {
       e.preventDefault()
       el.setPointerCapture(e.pointerId)
+      remeasure()
       b.mode = 'drag'
       b.moved = 0
       b.grab = { dx: e.clientX - box.left - b.x, dy: e.clientY - box.top - b.y }
@@ -121,7 +134,6 @@ export function initToys(hero: HTMLElement, stage: HTMLElement, avatar: AvatarCt
   // it all rests once the stage is out of sight, counting the strip under the bar as out of
   // sight, but anything you've thrown gets to land first
   let running = true
-  const bar = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--hud')) || 0
   new IntersectionObserver(([e]) => (running = e.isIntersecting), { rootMargin: `-${bar}px 0px 0px 0px` }).observe(stage)
 
   let last = performance.now()
@@ -133,6 +145,7 @@ export function initToys(hero: HTMLElement, stage: HTMLElement, avatar: AvatarCt
     last = now
     if (document.hidden || (!running && bodies.every((b) => b.mode === 'orbit'))) return
     clockT += dt
+    if (bodies.some((b) => b.mode !== 'orbit')) remeasure()
 
     for (const b of bodies) step(b, dt)
     collide()
@@ -177,11 +190,6 @@ export function initToys(hero: HTMLElement, stage: HTMLElement, avatar: AvatarCt
       b.vy += 380 * dt
       const speed = Math.hypot(b.vx, b.vy)
       b.spin = clamp(b.vx * 0.4, -500, 500)
-      // bounce off the edges of the title screen
-      if (b.x < bounds.l) ((b.x = bounds.l), (b.vx = Math.abs(b.vx) * 0.78))
-      if (b.x + b.r * 2 > bounds.r) ((b.x = bounds.r - b.r * 2), (b.vx = -Math.abs(b.vx) * 0.78))
-      if (b.y < bounds.t) ((b.y = bounds.t), (b.vy = Math.abs(b.vy) * 0.78))
-      if (b.y + b.r * 2 > bounds.b) ((b.y = bounds.b - b.r * 2), (b.vy = -Math.abs(b.vy) * 0.6))
       // a direct hit on the head
       const cx = b.x + b.r - head.x
       const cy = b.y + b.r - head.y
@@ -198,7 +206,6 @@ export function initToys(hero: HTMLElement, stage: HTMLElement, avatar: AvatarCt
       }
       // knock the letters of my name about
       if (b.thrown && speed > 260) {
-        if (lettersMoved) ((letterBoxes = letters.map((l) => l.getBoundingClientRect())), (lettersMoved = false))
         const px = box.left + b.x + b.r
         const py = box.top + b.y + b.r
         letterBoxes.forEach((r, i) => {
@@ -216,6 +223,14 @@ export function initToys(hero: HTMLElement, stage: HTMLElement, avatar: AvatarCt
     if (b.mode !== 'drag') {
       b.x += b.vx * dt
       b.y += b.vy * dt
+    }
+    // one you're holding or have thrown stays on screen: it bounces off the edges, checked after
+    // the move so it's never drawn past one, however fast it's going
+    if (b.mode !== 'orbit') {
+      if (b.x < bounds.l) ((b.x = bounds.l), (b.vx = Math.abs(b.vx) * 0.78))
+      if (b.x + b.r * 2 > bounds.r) ((b.x = bounds.r - b.r * 2), (b.vx = -Math.abs(b.vx) * 0.78))
+      if (b.y < bounds.t) ((b.y = bounds.t), (b.vy = Math.abs(b.vy) * 0.78))
+      if (b.y + b.r * 2 > bounds.b) ((b.y = bounds.b - b.r * 2), (b.vy = -Math.abs(b.vy) * 0.6))
     }
     b.turn += b.spin * dt
     b.el.style.transform = `translate3d(${b.x.toFixed(1)}px, ${b.y.toFixed(1)}px, 0) rotate(${b.turn.toFixed(1)}deg)`

@@ -15,6 +15,9 @@
 .footer a {
   color: var(--ink-2);
 }
+.footer__stack {
+  display: block;
+}
 [data-theme='dark'] .footer__spell--nox,
 :root:not([data-theme='dark']) .footer__spell--lumos {
   display: none;

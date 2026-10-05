@@ -101,7 +101,7 @@
   font-size: 18px;
 }
 .logbook-list {
-  padding-bottom: clamp(80px, 11vw, 150px);
+  padding-bottom: clamp(64px, 8.5vw, 120px);
 }
 .logbook-year:first-child .subhead {
   margin-top: 0;

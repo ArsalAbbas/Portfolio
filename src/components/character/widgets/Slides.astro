@@ -1,0 +1,70 @@
+---
+// Travel: views from trips, one at a time, over a little flight from Home to wherever's next
+// that moves along as they go by. The views are the pictures in src/assets/travel/, in name
+// order. A file's name is what a screen reader hears ("misty-hills.jpg" reads "Misty hills"),
+// so name the view, never the place. Nothing shows until there's a picture there. Moved along
+// by ./slides.ts.
+import { Image } from 'astro:assets'
+
+const files = import.meta.glob<{ default: ImageMetadata }>('../../../assets/travel/*.{jpg,jpeg,png,webp,avif}', {
+  eager: true,
+})
+const views = Object.entries(files)
+  .sort(([a], [b]) => a.localeCompare(b))
+  .map(([path, file]) => {
+    // "02_misty-hills.jpg" → "Misty hills": a number in front only sets the order
+    const words = path
+      .replace(/^.*\//, '')
+      .replace(/\.\w+$/, '')
+      .replace(/^\d+[-_ ]*/, '')
+      .replace(/[-_]+/g, ' ')
+    return { src: file.default, alt: words.charAt(0).toUpperCase() + words.slice(1) }
+  })
+// only the view on show and the one after it are drawn, so the rest load as their turn comes
+const state = (i: number) => (i === 0 ? ' is-on' : i === 1 ? ' is-next' : '')
+---
+
+{
+  views.length > 0 && (
+    <div class="slides" data-widget="slides" role="region" aria-roledescription="carousel" aria-label="Views from trips">
+      <div class="slides__frame" data-slides-frame>
+        {views.map((v, i) => (
+          <Image
+            class={`slides__view${state(i)}`}
+            src={v.src}
+            alt={v.alt}
+            aria-hidden={i === 0 ? undefined : 'true'}
+            widths={[480, 840]}
+            sizes="420px"
+          />
+        ))}
+      </div>
+      {views.length > 1 && (
+        <div class="slides__nav">
+          <button class="slides__step" type="button" data-step="-1" aria-label="Previous view">
+            <svg viewBox="0 0 16 16" aria-hidden="true">
+              <path d="M10 3 L5 8 L10 13" />
+            </svg>
+          </button>
+          <svg class="hop" viewBox="0 0 200 24" style={`--p: ${(1 / (views.length + 1)).toFixed(3)}`} aria-hidden="true">
+            <path class="hop__ahead" d="M8 12 H192" />
+            <path class="hop__trail" d="M8 12 H192" pathLength="1" />
+            <circle class="hop__home" cx="8" cy="12" r="4" />
+            <circle class="hop__next" cx="192" cy="12" r="4" />
+            <g class="hop__plane">
+              <path
+                transform="translate(0 12) scale(0.6) translate(-149 -32)"
+                d="M163 32 c0 -1.7 -1.4 -2.5 -3 -2.5 h-5 l-6.5 -8.5 h-3.5 l3 8.5 h-7.5 l-2.8 -3.6 h-2.7 l1.6 6.1 l-1.6 6.1 h2.7 l2.8 -3.6 h7.5 l-3 8.5 h3.5 l6.5 -8.5 h5 c1.6 0 3 -0.8 3 -2.5 z"
+              />
+            </g>
+          </svg>
+          <button class="slides__step" type="button" data-step="1" aria-label="Next view">
+            <svg viewBox="0 0 16 16" aria-hidden="true">
+              <path d="M6 3 L11 8 L6 13" />
+            </svg>
+          </button>
+        </div>
+      )}
+    </div>
+  )
+}

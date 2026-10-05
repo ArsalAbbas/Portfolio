@@ -1,7 +1,8 @@
 ---
 // Every page: the HUD along the top, the page itself, the footer, and on phones a controller
-// along the bottom. Also starts the two things that run everywhere: the field notes for the
-// UX Designer panel, and the listener for typed easter eggs.
+// along the bottom. Also starts the things that run everywhere: Vercel's visitor counts, the
+// field notes for the UX Designer panel, and the listener for typed easter eggs.
+import Analytics from '@vercel/analytics/astro'
 import '@fontsource-variable/unbounded'
 import '@fontsource-variable/geist'
 import '@fontsource-variable/geist-mono'
@@ -36,6 +37,7 @@ interface Props {
     <Footer />
     <Pad />
     <div class="toasts" role="status" aria-live="polite"></div>
+    <Analytics />
     <script>
       import { trackBehaviour } from '../scripts/behaviour'
       import { listenForSecrets } from '../scripts/secrets'

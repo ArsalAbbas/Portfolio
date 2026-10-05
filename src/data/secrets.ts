@@ -1,18 +1,21 @@
-// Small easter eggs: type the words anywhere on a page (on a keyboard) and something happens.
-// Nobody has to find them; they're a bonus for the people who do.
+// Small easter eggs: type one of these words anywhere on a page (on a keyboard) and something
+// happens. Poke the thing named in `hint`, in the hideout at the bottom of the Character page,
+// and the avatar gives its word away; the footer gives away the two spells.
 
 export interface Secret {
   id: 'lumos' | 'nox' | 'accio' | 'batman' | 'winter' | 'ready' | 'dust'
-  /** what to type, lowercase; apostrophes are optional */
-  words: string
+  /** what to type: one lowercase word */
+  word: string
+  /** what gives it away in the hideout: a `data-poke` in src/components/character/Room.astro */
+  hint?: string
 }
 
 export const secrets: Secret[] = [
-  { id: 'lumos', words: 'lumos' },
-  { id: 'nox', words: 'nox' },
-  { id: 'accio', words: 'accio coffee' },
-  { id: 'batman', words: "i'm batman" },
-  { id: 'winter', words: 'winter is coming' },
-  { id: 'ready', words: "i'm ready" },
-  { id: 'dust', words: "i don't feel so good" },
+  { id: 'lumos', word: 'lumos' },
+  { id: 'nox', word: 'nox' },
+  { id: 'accio', word: 'accio', hint: 'mug' },
+  { id: 'batman', word: 'batman', hint: 'caped' },
+  { id: 'winter', word: 'winter', hint: 'window' },
+  { id: 'ready', word: 'ready', hint: 'robot' },
+  { id: 'dust', word: 'snap', hint: 'plant' },
 ]

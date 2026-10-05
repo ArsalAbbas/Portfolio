@@ -1,6 +1,7 @@
 ---
-// The end of every page: a continue screen with a countdown, run by ./continue.ts. YES goes to
-// the most direct way of reaching me that's filled in, in src/data/site.ts.
+// The end of every page: an arcade-style continue screen that's really a way to say hi. YES goes
+// to the most direct way of reaching me that's filled in, in src/data/site.ts; ./continue.ts
+// says thanks for it, and sends NO back to the start.
 import { links, site } from '../../data/site'
 
 const yes = site.email ? `mailto:${site.email}` : (links.find((l) => l.label === 'LinkedIn') ?? links.find((l) => l.label === 'X') ?? links[0]).href
@@ -8,14 +9,13 @@ const yes = site.email ? `mailto:${site.email}` : (links.find((l) => l.label ===
 
 <section class="section continue" id="continue" data-section="continue" data-continue>
   <div class="wrap">
-    <p class="eyebrow">Game over? Not yet.</p>
-    <h2 class="continue__title">Continue?<span class="continue__count" data-count aria-hidden="true">9</span></h2>
+    <h2 class="continue__title">Continue?</h2>
     <p>I’m happy to talk about voice AI, interfaces, or any good design problem. Or coffee. Or who’d win, Batman or Spider-Man.</p>
     <div class="continue__choices">
       <a class="btn" href={yes} target={site.email ? undefined : '_blank'} rel="noreferrer" style="--hue: var(--green)" data-yes>Yes, say hi</a>
       <a class="btn btn--ghost" href="/" data-no>No, back to the start</a>
     </div>
-    <p class="continue__over" data-over aria-live="polite"></p>
+    <p class="continue__thanks" data-thanks aria-live="polite"></p>
     <ul class="hero__links continue__links">
       {
         site.email && (
