@@ -15,6 +15,11 @@ Lucide (https://lucide.dev), ISC licence, copyright (c) 2026 Lucide Icons and Co
   the drawn icons in src/components/skills/glyphs.ts: bot, braces, eye, mic and workflow.
   None of them are among the icons Lucide took from Feather.
 
+The GitHub, X and LinkedIn marks in src/components/shared/Socials.astro each link to my own
+profile on that site, which is a use their owners allow. They appear unchanged, in black or
+white. Their paths come from Simple Icons, CC0 1.0: GitHub and X from version 16, LinkedIn from
+version 10, since Simple Icons has dropped it.
+
 The two licences that ask to travel with the files follow.
 
 

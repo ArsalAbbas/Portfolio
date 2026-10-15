@@ -3,6 +3,7 @@
 // to the most direct way of reaching me that's filled in, in src/data/site.ts; ./continue.ts
 // says thanks for it, and sends NO back to the start.
 import { links, site } from '../../data/site'
+import Socials from '../shared/Socials.astro'
 
 const yes = site.email ? `mailto:${site.email}` : (links.find((l) => l.label === 'LinkedIn') ?? links.find((l) => l.label === 'X') ?? links[0]).href
 ---
@@ -16,24 +17,10 @@ const yes = site.email ? `mailto:${site.email}` : (links.find((l) => l.label ===
       <a class="btn btn--ghost" href="/" data-no>No, back to the start</a>
     </div>
     <p class="continue__thanks" data-thanks aria-live="polite"></p>
-    <ul class="hero__links continue__links">
-      {
-        site.email && (
-          <li>
-            <a href={`mailto:${site.email}`}>{site.email}</a>
-          </li>
-        )
-      }
-      {
-        links.map((l) => (
-          <li>
-            <a href={l.href} target="_blank" rel="noreferrer">
-              {l.label} · {l.handle}
-            </a>
-          </li>
-        ))
-      }
-    </ul>
+    <div class="continue__links">
+      {site.email && <a class="continue__email" href={`mailto:${site.email}`}>{site.email}</a>}
+      <Socials />
+    </div>
   </div>
 </section>
 

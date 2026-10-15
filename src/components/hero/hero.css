@@ -128,18 +128,6 @@
   gap: 14px 22px;
   margin-top: 34px;
 }
-.hero__links {
-  display: flex;
-  gap: 16px;
-  font: 500 13px/1 var(--mono);
-}
-.hero__links a {
-  color: var(--ink-2);
-}
-.hero__links a:hover {
-  color: var(--ink);
-}
-
 .hero__stage {
   position: relative;
   width: min(100%, 560px);

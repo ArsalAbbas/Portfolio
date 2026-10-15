@@ -3,6 +3,7 @@
 import { mountDishes } from './dishes'
 import { mountFieldNotes } from './fieldnotes'
 import { mountKalimba } from './kalimba'
+import { mountPingPong } from './pingpong'
 import { mountSketch } from './sketch'
 import { mountSlides } from './slides'
 import { mountV60 } from './v60'
@@ -19,6 +20,7 @@ const mounts: Record<string, (el: HTMLElement, ctx: WidgetCtx) => void> = {
   dishes: mountDishes,
   slides: mountSlides,
   kalimba: mountKalimba,
+  pingpong: mountPingPong,
 }
 
 export function mountWidget(el: HTMLElement, ctx: WidgetCtx) {

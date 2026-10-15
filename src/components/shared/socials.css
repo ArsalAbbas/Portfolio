@@ -1,0 +1,28 @@
+/* The GitHub, X and LinkedIn marks, on the title screen and the continue screen. */
+
+.socials {
+  display: flex;
+  gap: 6px;
+}
+.socials__link {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  /* each mark's owner allows it in black or white, unchanged, so these skip the ink colours */
+  color: #000;
+  transition:
+    background-color 0.2s,
+    translate 0.4s var(--spring);
+}
+[data-theme='dark'] .socials__link {
+  color: #fff;
+}
+.socials__link:hover {
+  background-color: var(--paper-2);
+  translate: 0 -2px;
+}
+.socials svg {
+  fill: currentColor;
+}

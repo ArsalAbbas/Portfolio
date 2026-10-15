@@ -29,13 +29,14 @@ export type Hue = 'red' | 'green' | 'pink' | 'blue' | 'yellow'
 
 /**
  * The four sections, each with its own shape and colour, like the buttons on a controller.
- * The work comes first, on the home page; the Character page is for the curious.
+ * The work comes first, on the home page; the Character page (About me) is for the curious.
+ * The labels are plain words, so you know where they go; the game names are on the pages.
  */
 export const sections = [
-  { id: 'quests', label: 'Quests', shape: 'circle', hue: 'red', key: '1', href: '/#quests' },
-  { id: 'skills', label: 'Skill tree', shape: 'triangle', hue: 'green', key: '2', href: '/#skills' },
+  { id: 'quests', label: 'Work', shape: 'circle', hue: 'red', key: '1', href: '/#quests' },
+  { id: 'skills', label: 'Skills', shape: 'triangle', hue: 'green', key: '2', href: '/#skills' },
   { id: 'blog', label: 'Blog', shape: 'cross', hue: 'blue', key: '3', href: '/#blog' },
-  { id: 'character', label: 'Character', shape: 'square', hue: 'pink', key: '4', href: '/character/' },
+  { id: 'character', label: 'About me', shape: 'square', hue: 'pink', key: '4', href: '/character/' },
 ] as const satisfies readonly { id: string; label: string; shape: ShapeName; hue: Hue; key: string; href: string }[]
 
 export type SectionId = (typeof sections)[number]['id']
@@ -51,5 +52,15 @@ export function level(now = new Date()) {
     if (next > now) return { lvl, progress: (now.getTime() - from.getTime()) / (next.getTime() - from.getTime()), next }
     from = next
     lvl++
+  }
+}
+
+const ordinal = (n: number) => `${n}${(n % 100 >= 11 && n % 100 <= 13 ? 'th' : ['th', 'st', 'nd', 'rd'][n % 10]) ?? 'th'}`
+
+/** What the level bar says beside it, and when you hover it, so the level isn't a mystery. */
+export function levelWords({ lvl, next } = level()) {
+  return {
+    beside: `${ordinal(lvl)} year as an engineer`,
+    hover: `One level for each year as an engineer. Level ${lvl + 1} in ${next.toLocaleDateString('en-GB', { month: 'long', year: 'numeric' })}.`,
   }
 }

@@ -4,11 +4,11 @@ import { Image } from 'astro:assets'
 import circles from '../../assets/art/circles.webp'
 import coffee from '../../assets/photos/coffee.webp'
 import focus from '../../assets/photos/focus.webp'
-import tableTennis from '../../assets/photos/table-tennis.webp'
 import type { CharacterClass, Widget } from '../../data/character'
 import Dishes from './widgets/Dishes.astro'
 import FieldNotes from './widgets/FieldNotes.astro'
 import Kalimba from './widgets/Kalimba.astro'
+import PingPong from './widgets/PingPong.astro'
 import Sketch from './widgets/Sketch.astro'
 import Slides from './widgets/Slides.astro'
 import V60 from './widgets/V60.astro'
@@ -36,13 +36,13 @@ const widgets: Record<Widget, typeof Sketch> = {
   dishes: Dishes,
   slides: Slides,
   kalimba: Kalimba,
+  pingpong: PingPong,
 }
 const Toy = cls.widget && widgets[cls.widget]
 const photos: Partial<Record<CharacterClass['id'], Photo>> = {
   engineer: { src: focus, alt: 'Arsal working on a laptop in a café' },
   researcher: { src: circles, alt: 'Three superhero faces drawn with circles', wide: true },
   barista: { src: coffee, alt: 'A frothy coffee in a white cup, up close', crop: '50% 20%' },
-  athlete: { src: tableTennis, alt: 'Arsal playing table tennis', wide: true },
 }
 const photo = photos[cls.id]
 ---

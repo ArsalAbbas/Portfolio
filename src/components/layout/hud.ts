@@ -28,7 +28,7 @@ export function initHud() {
   addEventListener('scroll', onScroll, { passive: true })
   onScroll()
 
-  // light up the link for the section in the middle of the screen
+  // light up the link for the section in the middle of the screen, and colour the bar to match
   const links = $$('[data-nav]')
   const io = new IntersectionObserver(
     (entries) => {
@@ -36,6 +36,9 @@ export function initHud() {
         if (!e.isIntersecting) continue
         const id = (e.target as HTMLElement).dataset.section
         links.forEach((l) => l.setAttribute('aria-current', String(l.dataset.nav === id)))
+        const hue = sections.find((s) => s.id === id)?.hue
+        if (hue) xp?.style.setProperty('--bar', `var(--${hue})`)
+        else xp?.style.removeProperty('--bar')
       }
     },
     { rootMargin: '-45% 0px -50% 0px' },

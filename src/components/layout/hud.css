@@ -117,7 +117,9 @@
   width: 100%;
   transform-origin: left;
   transform: scaleX(var(--xp, 0));
-  background: linear-gradient(90deg, var(--red), var(--yellow), var(--green), var(--blue), var(--pink));
+  /* one colour: the section you're in, like its link above; plain ink on the title screen */
+  background-color: var(--bar, var(--ink));
+  transition: background-color 0.3s;
 }
 .theme-icon--sun {
   display: none;

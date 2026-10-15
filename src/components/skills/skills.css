@@ -28,6 +28,18 @@
 .branch__root .shape {
   --hue: var(--card);
 }
+/* under the nodes: what I've used them for */
+.branch__use {
+  grid-column: 2;
+  margin-top: -6px;
+  font: 500 12.5px/1.55 var(--mono);
+  color: var(--ink-3);
+  text-wrap: pretty;
+}
+.branch__use b {
+  color: var(--ink-2);
+  font-weight: 600;
+}
 .branch__nodes {
   position: relative;
   display: flex;
@@ -161,5 +173,8 @@
   }
   .branch__root {
     justify-self: start;
+  }
+  .branch__use {
+    grid-column: 1;
   }
 }

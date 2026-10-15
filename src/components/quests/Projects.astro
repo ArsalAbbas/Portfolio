@@ -1,0 +1,46 @@
+---
+// Things I've made on my own time. One you can use has a button that copies a prompt to set it
+// up, for pasting into Claude Code, and one that isn't finished shows how far along it is. The
+// words live in src/data/work.ts.
+import { projects } from '../../data/work'
+import Shape from '../shared/Shape.astro'
+---
+
+<div class="projects">
+  {
+    projects.map((project) => (
+      <article class="card project" style={`--hue: var(--${project.hue})`}>
+        <div class="quest__title">
+          <Shape name={project.shape} size={22} />
+          <h4>{project.name}</h4>
+          <span class="project__year">{project.year}</span>
+        </div>
+        <p class="quest__line">{project.line}</p>
+        {project.progress && (
+          <p class="project__progress">
+            <span class="project__bar" aria-hidden="true">
+              <i style={`--p: ${project.progress.done}`} />
+            </span>
+            {project.progress.label}
+          </p>
+        )}
+        <ul class="project__tags">
+          {project.tags.map((tag) => (
+            <li class="chip">{tag}</li>
+          ))}
+        </ul>
+        {project.prompt && (
+          <button class="btn btn--small btn--ghost project__copy" type="button" data-copy={project.prompt}>
+            Copy setup prompt
+          </button>
+        )}
+      </article>
+    ))
+  }
+</div>
+
+<script>
+  import { initProjects } from './projects'
+
+  initProjects()
+</script>

@@ -136,6 +136,19 @@ export function initToys(hero: HTMLElement, stage: HTMLElement, avatar: AvatarCt
   let running = true
   new IntersectionObserver(([e]) => (running = e.isIntersecting), { rootMargin: `-${bar}px 0px 0px 0px` }).observe(stage)
 
+  // a moment after the page opens, the shape furthest out to one side slips out of orbit and
+  // falls, so you can see they're loose. It drifts back like one you've thrown
+  setTimeout(() => {
+    if (!bodies.length || !running || bodies.some((b) => b.mode !== 'orbit')) return
+    const side = (b: Body) => b.x + b.r - box.width / 2
+    const b = bodies.reduce((a, c) => (Math.abs(side(c)) > Math.abs(side(a)) ? c : a))
+    b.mode = 'fly'
+    // a head start on the clock that sends a thrown shape home, so this one lands first
+    b.flown = -1.5
+    b.vx = Math.sign(side(b)) * 90
+    b.vy = -160
+  }, 1600)
+
   let last = performance.now()
   let clockT = 0
   const hitLetter = new Map<HTMLElement, number>()

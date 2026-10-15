@@ -18,7 +18,7 @@ import Shape from '../shared/Shape.astro'
     <nav class="hud__nav" aria-label="Sections">
       {
         sections.map((s) => (
-          <a class="hud__link" href={s.href} data-nav={s.id} style={`--hue: var(--${s.hue})`}>
+          <a class="hud__link" href={s.href} data-nav={s.id} style={`--hue: var(--${s.hue})`} title={`Or press ${s.key}`}>
             <Shape name={s.shape} size={14} />
             <span>{s.label}</span>
             <kbd aria-hidden="true">{s.key}</kbd>

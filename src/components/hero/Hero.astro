@@ -1,10 +1,12 @@
 ---
 // The title screen: who I am, a level bar for years on the job, and a stage with the avatar
 // and four shapes you can throw.
-import { level, links, site } from '../../data/site'
+import { level, levelWords, site } from '../../data/site'
+import Socials from '../shared/Socials.astro'
 import HeroStage from './HeroStage.astro'
 
 const lvl = level()
+const words = levelWords(lvl)
 // each letter of my name pops a different colour when you hover it
 const pops = ['var(--red)', 'var(--green)', 'var(--pink)', 'var(--blue)', 'var(--yellow)']
 const letters = (word: string, offset: number) =>
@@ -28,16 +30,14 @@ const letters = (word: string, offset: number) =>
         <strong>{site.role}</strong> at <a href={site.companyUrl} target="_blank" rel="noreferrer">{site.company}</a>.
         {' '}{site.tagline}
       </p>
-      <p class="hero__level mono" title="Levels are years shipping in production. The bar fills toward the next one.">
+      <p class="hero__level mono" title={words.hover} data-level>
         <span>LVL <b data-lvl>{lvl.lvl}</b></span>
         <span class="xpbar" aria-hidden="true"><i data-xp style={`--p: ${lvl.progress.toFixed(3)}`}></i></span>
-        <span data-next>Next level {lvl.next.toLocaleDateString('en-GB', { month: 'short', year: 'numeric' })}</span>
+        <span data-year>{words.beside}</span>
       </p>
       <div class="hero__cta">
         <a class="btn" href="#quests" data-start>Press <span class="key" aria-hidden="true">✕</span><span class="sr-only">X</span> to start</a>
-        <ul class="hero__links">
-          {links.map((l) => <li><a href={l.href} target="_blank" rel="noreferrer">{l.label}</a></li>)}
-        </ul>
+        <Socials />
       </div>
     </div>
 

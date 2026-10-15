@@ -7,10 +7,10 @@ import { $, coarsePointer } from '../../../scripts/util'
 
 const SECTION_NAMES: Record<string, string> = {
   top: 'the title screen',
-  quests: 'Quests',
-  skills: 'the skill tree',
+  quests: 'the work section',
+  skills: 'the skills section',
   blog: 'the blog',
-  character: 'Character',
+  character: 'About me',
   continue: 'the very end',
 }
 

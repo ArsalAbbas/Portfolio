@@ -10,7 +10,7 @@ import type { Hue, ShapeName } from './site'
 export type ClassId = 'engineer' | 'researcher' | 'artist' | 'barista' | 'foodie' | 'traveller' | 'athlete' | 'bard'
 
 /** the toys in the panels, in src/components/character/widgets */
-export type Widget = 'fieldnotes' | 'sketch' | 'v60' | 'dishes' | 'slides' | 'kalimba'
+export type Widget = 'fieldnotes' | 'sketch' | 'v60' | 'dishes' | 'slides' | 'kalimba' | 'pingpong'
 
 export interface Costume {
   id: 'wizard' | 'bat' | 'ninja' | 'pirate'
@@ -102,8 +102,9 @@ export const classes: CharacterClass[] = [
     hobby: 'Side quest',
     shape: 'cross',
     hue: 'green',
-    blurb: 'Usually up for a game, once the work’s done.',
+    blurb: 'Usually up for a game, once the work’s done. Table tennis? First to 5.',
     lines: ['Smash!', 'That was in.', 'Best of three?', 'Your serve.'],
+    widget: 'pingpong',
   },
   {
     id: 'bard',
@@ -127,7 +128,7 @@ export const classes: CharacterClass[] = [
 export const heroLines = [
   'Hi! I’m Arsal.',
   'Psst. You can throw those shapes.',
-  'I build voice AI. The rest of me lives on the Character page.',
+  'I build voice AI. The rest of me is under About me.',
   'Okay, that tickles.',
 ]
 

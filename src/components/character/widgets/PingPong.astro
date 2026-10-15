@@ -1,0 +1,31 @@
+---
+// Sports: a game of table tennis against me, first to 5. You're the red paddle on the left; the
+// game itself is in ./pingpong.ts.
+---
+
+<div class="widget" data-widget="pingpong">
+  <div class="pong" data-court tabindex="0" role="application" aria-label="Table tennis against Arsal. Move your paddle with the mouse, a finger, or the up and down arrow keys; Space serves.">
+    <svg viewBox="0 0 300 140" aria-hidden="true">
+      <path class="pong__floor" d="M8 134 H292"></path>
+      <path d="M70 104 V134 M230 104 V134" stroke-width="3"></path>
+      <rect class="pong__table" x="40" y="100" width="220" height="7" rx="2"></rect>
+      <rect class="pong__net" x="148" y="86" width="4" height="14"></rect>
+      <g data-paddle="you" transform="translate(22 60)">
+        <path d="M-4 12 L-10 26" stroke-width="5"></path>
+        <circle class="pong__rubber pong__rubber--red" r="13"></circle>
+      </g>
+      <g data-paddle="arsal" transform="translate(278 60)">
+        <path d="M4 12 L10 26" stroke-width="5"></path>
+        <circle class="pong__rubber" r="13"></circle>
+      </g>
+      <circle class="pong__ball" data-ball cx="30" cy="60" r="4.5"></circle>
+    </svg>
+    <p class="pong__score" aria-hidden="true">
+      <span>You <b data-score="you">0</b></span><span>–</span><span><b data-score="arsal">0</b> Arsal</span>
+    </p>
+  </div>
+  <div class="widget__foot pong__foot">
+    <button class="btn btn--small" type="button" data-serve style="--hue: var(--green)">Serve</button>
+    <span class="fineprint" data-call aria-live="polite">Move with the mouse, a finger or the arrow keys. First to 5.</span>
+  </div>
+</div>

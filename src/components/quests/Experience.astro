@@ -1,0 +1,34 @@
+---
+// Where I've worked, newest first: a card for each place, with a row for each role there and
+// when. The words live in src/data/work.ts.
+import { places } from '../../data/work'
+---
+
+<div class="places">
+  {
+    places.map((place) => (
+      <article class="card place" style={`--hue: var(--${place.hue})`}>
+        <header class="place__head">
+          <h4>
+            {place.href ? (
+              <a href={place.href} target="_blank" rel="noreferrer">
+                {place.name}
+              </a>
+            ) : (
+              place.name
+            )}
+          </h4>
+          <p class="eyebrow">{place.line}</p>
+        </header>
+        <ol class="place__stints">
+          {place.stints.map((stint) => (
+            <li class="stint">
+              <h5>{stint.title}</h5>
+              <p class="stint__when">{stint.when}</p>
+            </li>
+          ))}
+        </ol>
+      </article>
+    ))
+  }
+</div>
