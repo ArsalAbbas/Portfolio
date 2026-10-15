@@ -1,7 +1,9 @@
 ---
-// Things I've made on my own time. One you can use has a button that copies a prompt to set it
-// up, for pasting into Claude Code, and one that isn't finished shows how far along it is. The
-// words live in src/data/work.ts.
+// Things I've made on my own time. One that's online links to it; one you set up yourself has a
+// button that copies a prompt for Claude Code; one that isn't out yet says where it's headed; one
+// that isn't finished shows how far along it is. Hover one with a screenshot and it pops up above the card. The words live in
+// src/data/work.ts.
+import { Image } from 'astro:assets'
 import { projects } from '../../data/work'
 import Shape from '../shared/Shape.astro'
 ---
@@ -9,7 +11,12 @@ import Shape from '../shared/Shape.astro'
 <div class="projects">
   {
     projects.map((project) => (
-      <article class="card project" style={`--hue: var(--${project.hue})`}>
+      <article class="card project" style={`--hue: var(--${project.hue})`} data-project>
+        {project.shot && (
+          <figure class="project__shot">
+            <Image src={project.shot.src} alt={project.shot.alt} widths={[540, 1000]} sizes="540px" />
+          </figure>
+        )}
         <div class="quest__title">
           <Shape name={project.shape} size={22} />
           <h4>{project.name}</h4>
@@ -29,6 +36,12 @@ import Shape from '../shared/Shape.astro'
             <li class="chip">{tag}</li>
           ))}
         </ul>
+        {project.soon && <p class="project__soon">{project.soon}</p>}
+        {project.live && (
+          <a class="btn btn--small project__live" href={project.live} target="_blank" rel="noreferrer">
+            Try it
+          </a>
+        )}
         {project.prompt && (
           <button class="btn btn--small btn--ghost project__copy" type="button" data-copy={project.prompt}>
             Copy setup prompt
