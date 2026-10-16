@@ -19,8 +19,6 @@ export interface Branch {
   shape: ShapeName
   hue: Hue
   skills: Skill[]
-  /** what I've used it for at work, in a line: what it does, never how it works inside */
-  usedFor?: string
 }
 
 export const branches: Branch[] = [
@@ -32,7 +30,6 @@ export const branches: Branch[] = [
       { name: 'LLM agents', glyph: 'bot', core: true },
       { name: 'WebRTC', logo: 'webrtc' },
     ],
-    usedFor: 'a knowledge base for our voice agents, switching their models and memory, faster replies, and a voice assistant other apps can embed',
   },
   {
     name: 'Backend',
@@ -45,7 +42,6 @@ export const branches: Branch[] = [
       { name: 'PostgreSQL', logo: 'postgresql' },
       { name: 'Redis', logo: 'redis' },
     ],
-    usedFor: 'the APIs behind our consoles, and keeping calls reliable across telephony carriers',
   },
   {
     name: 'Frontend',
@@ -59,7 +55,6 @@ export const branches: Branch[] = [
       { name: 'Tailwind', logo: 'tailwind' },
       { name: 'Vite', logo: 'vite' },
     ],
-    usedFor: 'a console for reviewing calls, a demo hub for our agents, and the web and mobile app our call agents work in, one codebase with React Native for Web',
   },
   {
     name: 'Platform',

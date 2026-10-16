@@ -1,6 +1,6 @@
 // Where I've worked and what I've made, under the quest cards. Just the roles and their dates:
-// what I do there is in the quest cards, and in the skill tree (./skills.ts). Same rule as
-// ./quests.ts: never how things work inside, who they're for, or any numbers.
+// what I do there is in the quest cards. Same rule as ./quests.ts: never how things work inside,
+// who they're for, or any numbers.
 
 import type { ImageMetadata } from 'astro'
 import autopost from '../assets/projects/autopost.webp'
